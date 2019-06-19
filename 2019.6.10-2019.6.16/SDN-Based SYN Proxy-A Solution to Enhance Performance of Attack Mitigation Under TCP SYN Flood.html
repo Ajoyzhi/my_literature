@@ -1,0 +1,89 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SDN-Based SYN Proxy-A Solution to Enhance Performance of Attack Mitigation Under TCP SYN Flood</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="15dm" id="sdn-based-syn-proxy-a-solution-to-enhance-performance-of-attack-mitigation-under-tcp-syn-flood">SDN-Based SYN Proxy-A Solution to Enhance Performance of Attack Mitigation Under TCP SYN Flood</h1><div class="md-section-divider"></div><h3 data-anchor-id="m5il" id="section-d-security-in-computer-systems-and-networks-the-computer-journal-vol-62-no-4-2019">SECTION D: SECURITY IN COMPUTER SYSTEMS AND NETWORKS THE COMPUTER JOURNAL, VOL. 62 NO. 4, 2019</h3><p data-anchor-id="l8mt"><code>论文</code></p><hr><blockquote data-anchor-id="lftd" class="white-blockquote">
+  <p>基础内容</p>
+</blockquote><ul data-anchor-id="6vws">
+<li>SYN Flood 处理思路 <br>
+（1）SYN Cookies(Avant-Guard主要使用这种) <br>
+（2）SYN Cache <br>
+（3）SYN Proxy(本文主要使用这种) <br>
+<a href="https://imgchr.com/i/Vo6qrF" target="_blank"><img src="https://s2.ax1x.com/2019/06/15/Vo6qrF.th.png" alt="Vo6qrF.th.png" title=""></a></li>
+</ul><table data-anchor-id="ae68" class="table table-striped-white table-bordered">
+<thead>
+<tr>
+ <th style="text-align:center;">名称</th>
+ <th style="text-align:center;">方法</th>
+ <th style="text-align:center;">优点</th>
+ <th style="text-align:center;">缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+ <td style="text-align:center;">SYN-ACK spoofing proxy</td>
+ <td style="text-align:center;">客户与代理建立完整连接，然后再由代理迁移到服务器上</td>
+ <td style="text-align:center;">可以有效防止对服务器的攻击</td>
+ <td style="text-align:center;">代理要维护序列号;可能使代理成为新的攻击对象</td>
+</tr>
+<tr>
+ <td style="text-align:center;">ACK spoofing proxy</td>
+ <td style="text-align:center;">客户直接和服务器建立连接，如果客户没有按时发送ACK，就有代理发送ACK/RST终止连接</td>
+ <td style="text-align:center;">不必维护序列号</td>
+ <td style="text-align:center;">攻击流量直接到达服务器，如果不及时移除恶意流量，还是会造成攻击</td>
+</tr>
+</tbody></table><p data-anchor-id="r3de">* Table-miss对应的流规则，存储为第四条流规则，记为FE4。</p><blockquote data-anchor-id="p9bl" class="white-blockquote">
+  <p>系统设计</p>
+</blockquote><p data-anchor-id="5qsf"><a href="https://imgchr.com/i/VTkfcd" target="_blank"><img src="https://s2.ax1x.com/2019/06/16/VTkfcd.th.png" alt="VTkfcd.th.png" title=""></a> <br>
+主要实现在控制器上，通过SYN Proxy Module对交换机安装对应的规则，以捕捉数据包。 <br>
+<a href="https://imgchr.com/i/VTkap4" target="_blank"><img src="https://s2.ax1x.com/2019/06/16/VTkap4.th.png" alt="VTkap4.th.png" title=""></a> <br>
+使用ACK spoofing proxy，监控SYN、SYN-ACK的连接，将ACK转发到控制器，经由控制器判断之后，再决定是将连接迁移还是丢弃。</p><blockquote data-anchor-id="gapz" class="white-blockquote">
+  <p>系统实现</p>
+</blockquote><ul data-anchor-id="0d5l">
+<li>使用多级流表捕捉三次握手数据包(以以上拓扑为例)</li>
+</ul><p data-anchor-id="keyv"><a href="https://imgchr.com/i/VTk7Af" target="_blank"><img src="https://s2.ax1x.com/2019/06/16/VTk7Af.th.png" alt="VTk7Af.th.png" title=""></a> <br>
+FT0:FE1x用于捕捉SYN数据包；FE2用于捕捉SYN-ACK数据包；FE3用于处理ACK数据包（直接转发到FT1），因为对于客户的ACK数据包，需要转发到控制器中进行判断；FE4对于其它数据包，直接交给FT2. <br>
+FT1:FE5x用于将ACK数据包转发到控制器验证。timeout根据T<sub>ACK</sub>-T<sub>SYN-ACK</sub>计算得到，如果超时，流实体失效，并通过Timeout事件通知控制器，清除对应的半连接(HOC)；在将对应数据包转发给控制器之后，删除对应的流实体。 <br>
+FT2:FE7用于处理其它的TCP数据包，FE8x用于处理从FT0、FT1过来的数据包。</p><ul data-anchor-id="4fom">
+<li>SPM(SYN Proxy Module)实现</li>
+</ul><p data-anchor-id="o2v6"><a href="https://imgchr.com/i/VTEcSe" target="_blank"><img src="https://s2.ax1x.com/2019/06/16/VTEcSe.th.png" alt="VTEcSe.th.png" title=""></a> <br>
+对ACK数据包进行验证；对SYN-ACK数据包安装对应的流规则，并开始计算timeout。 <br>
+FMT：Flow Monitoring Tabl。在SPM中记录半连接细节的表格，包括源/目的IP，源/目的端口，SYN-ACK的序列号。</p><ul data-anchor-id="jwmq">
+<li>Timeout计算</li>
+</ul><p data-anchor-id="mk4f"><a href="https://imgchr.com/i/VTELOs" target="_blank"><img src="https://s2.ax1x.com/2019/06/16/VTELOs.th.png" alt="VTELOs.th.png" title=""></a> <br>
+n:当前服务器维持的HOC；N：服务器可以处理的平均HOC;T<sub>1</sub>:正常时期，服务器可以等待的最长SYN-ACK到ACK的时间；T<sub>2</sub>:攻击时期，服务器可以等待的最短时间；k：相关系数。</p><ul data-anchor-id="n12o">
+<li>状态转化条件</li>
+</ul><p data-anchor-id="0111"><a href="https://imgchr.com/i/VTV7Ax" target="_blank"><img src="https://s2.ax1x.com/2019/06/16/VTV7Ax.th.png" alt="VTV7Ax.th.png" title=""></a> <br>
+在deactivated状态下，丢弃一切SYN数据包。</p><blockquote data-anchor-id="iwn8" class="white-blockquote">
+  <p>实验测评</p>
+</blockquote><ul data-anchor-id="jiju">
+<li>环境</li>
+</ul><p data-anchor-id="rvhv"><a href="https://imgchr.com/i/VTZuEq" target="_blank"><img src="https://s2.ax1x.com/2019/06/16/VTZuEq.th.png" alt="VTZuEq.th.png" title=""></a></p><ul data-anchor-id="mygi">
+<li>拓扑</li>
+</ul><p data-anchor-id="udmf"><a href="https://imgchr.com/i/VTZRat" target="_blank"><img src="https://s2.ax1x.com/2019/06/16/VTZRat.th.png" alt="VTZRat.th.png" title=""></a></p><ul data-anchor-id="57jc">
+<li>性能 <br>
+（1）流实体的生存时间 <br>
+无本系统：T<sub>FE_life_AG</sub>=T<sub>life</sub>+T<sub>idleTimeOut</sub>-T<sub>handshake</sub> <br>
+T<sub>life</sub>:经过交换机的第一个数据包到最后一个数据包的时间。 <br>
+T<sub>idleTimeOut</sub>：流的超时时间。 <br>
+有本系统：T<sub>FE_life_SSP</sub>=T<sub>handshake</sub> <br>
+分析45分钟内100个网站的合法流量得到相关数据(CAIDA): <br>
+<a href="https://imgchr.com/i/VTe0wn" target="_blank"><img src="https://s2.ax1x.com/2019/06/16/VTe0wn.th.png" alt="VTe0wn.th.png" title=""></a> <br>
+T<sub>FE_life_AG</sub>=18.26-0.93=17.33S <br>
+T<sub>FE_life_SSP</sub>=0.93S <br>
+性能提升：(17.33-0.93)/17.33=94% <br>
+（2）攻击下对控制器的影响 <br>
+<a href="https://imgchr.com/i/VTmV7n" target="_blank"><img src="https://s2.ax1x.com/2019/06/16/VTmV7n.th.png" alt="VTmV7n.th.png" title=""></a> <br>
+<a href="https://imgchr.com/i/VTmE0s" target="_blank"><img src="https://s2.ax1x.com/2019/06/16/VTmE0s.th.png" alt="VTmE0s.th.png" title=""></a>  <br>
+（3）合法TCP连接成功的可能性 <br>
+合法流量：50TCP连接/s <br>
+<a href="https://imgchr.com/i/VTmDnH" target="_blank"><img src="https://s2.ax1x.com/2019/06/16/VTmDnH.th.png" alt="VTmDnH.th.png" title=""></a> <br>
+<a href="https://imgchr.com/i/VTmrBd" target="_blank"><img src="https://s2.ax1x.com/2019/06/16/VTmrBd.th.png" alt="VTmrBd.th.png" title=""></a> <br>
+（4）服务器HOC数量 <br>
+参数：k=1.5,T1=15s,T2=2s,N=500,M1=7500,M2=7000 <br>
+<a href="https://imgchr.com/i/VTm7En" target="_blank"><img src="https://s2.ax1x.com/2019/06/16/VTm7En.th.png" alt="VTm7En.th.png" title=""></a></li>
+</ul></div>
+</body>
+</html>

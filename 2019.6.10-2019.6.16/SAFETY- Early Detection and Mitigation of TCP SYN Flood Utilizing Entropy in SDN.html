@@ -1,0 +1,61 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SAFETY: Early Detection and Mitigation of TCP SYN Flood Utilizing Entropy in SDN</title>
+</head>
+<body>
+<div style="visibility: hidden; overflow: hidden; position: absolute; top: 0px; height: 1px; width: auto; padding: 0px; border: 0px; margin: 0px; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal;"><div id="MathJax_SVG_Hidden"></div><svg><defs id="MathJax_SVG_glyphs"><path id="MJMATHI-3B4" stroke-width="1" d="M195 609Q195 656 227 686T302 717Q319 716 351 709T407 697T433 690Q451 682 451 662Q451 644 438 628T403 612Q382 612 348 641T288 671T249 657T235 628Q235 584 334 463Q401 379 401 292Q401 169 340 80T205 -10H198Q127 -10 83 36T36 153Q36 286 151 382Q191 413 252 434Q252 435 245 449T230 481T214 521T201 566T195 609ZM112 130Q112 83 136 55T204 27Q233 27 256 51T291 111T309 178T316 232Q316 267 309 298T295 344T269 400L259 396Q215 381 183 342T137 256T118 179T112 130Z"></path><path id="MJMATHI-3C3" stroke-width="1" d="M184 -11Q116 -11 74 34T31 147Q31 247 104 333T274 430Q275 431 414 431H552Q553 430 555 429T559 427T562 425T565 422T567 420T569 416T570 412T571 407T572 401Q572 357 507 357Q500 357 490 357T476 358H416L421 348Q439 310 439 263Q439 153 359 71T184 -11ZM361 278Q361 358 276 358Q152 358 115 184Q114 180 114 178Q106 141 106 117Q106 67 131 47T188 26Q242 26 287 73Q316 103 334 153T356 233T361 278Z"></path></defs></svg></div><div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="swyz" id="safety-early-detection-and-mitigation-of-tcp-syn-flood-utilizing-entropy-in-sdn">SAFETY: Early Detection and Mitigation of TCP SYN Flood Utilizing Entropy in SDN</h1><div class="md-section-divider"></div><h3 data-anchor-id="8v5i" id="ieee-transactions-on-network-and-service-management-vol-15-no-4-december-2018">IEEE TRANSACTIONS ON NETWORK AND SERVICE MANAGEMENT, VOL. 15, NO. 4, DECEMBER 2018</h3><p data-anchor-id="l1s8"><code>论文</code></p><hr><p data-anchor-id="pkq1">通过对目的IP的熵的计算，找到攻击者和受害者，再制定缓解措施。</p><blockquote data-anchor-id="05ue" class="white-blockquote">
+  <p>整体算法流程</p>
+</blockquote><p data-anchor-id="nk77"><a href="https://imgchr.com/i/VWppBn" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWppBn.th.png" alt="VWppBn.th.png" title=""></a>即<a href="https://imgchr.com/i/VW9S2D" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VW9S2D.th.png" alt="VW9S2D.th.png" title=""></a></p><ul data-anchor-id="kpv6">
+<li>针对某目的IP未完成的半连接数进行统计，是SYN数据包，计数+1；是SYN-ACK，计数-1；是RST，计数+1。RST说明源主机发现自己的IP被盗用，主动放弃连接，但是依然占用了目的IP，所以要计算在内。 <br>
+<span style="color:red;"><strong>Ajoy:为什么收到SYN-ACK要-1？明明没有完成对此目的IP的TCP连接。。</strong></span></li>
+<li>统计某时间段<span class="MathJax_Preview"></span><span class="MathJax_SVG" id="MathJax-Element-1-Frame" role="textbox" aria-readonly="true" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 -738.9033013280564 451.5 770.8066026561128" style="width: 1ex; height: 1.778ex; vertical-align: -0.222ex; margin: 1px 0px;"><g stroke="black" fill="black" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#MJMATHI-3B4"></use></g></svg></span><script type="math/tex" id="MathJax-Element-1">\delta</script>t内目的IP的熵。</li>
+<li>如果熵小于一个阈值<span class="MathJax_Preview"></span><span class="MathJax_SVG" id="MathJax-Element-2-Frame" role="textbox" aria-readonly="true" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 -738.9033013280564 451.5 770.8066026561128" style="width: 1ex; height: 1.778ex; vertical-align: -0.222ex; margin: 1px 0px;"><g stroke="black" fill="black" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#MJMATHI-3B4"></use></g></svg></span><script type="math/tex" id="MathJax-Element-2">\delta</script>（熵越小，随机程度越小，说明目的IP越集中，越可能发生攻击），就增加Attack Count。如果AC大于某个阈值K，说明连续的几个时间段内的熵均小于某个阈值，就标记受害节点，找攻击节点，采取缓解措施。否则清空，重新统计。</li>
+<li>如果熵大于此阈值，说明没有发生攻击。如果熵列表满了，就利用列表中的所有正常流量的熵更新阈值<span class="MathJax_Preview"></span><span class="MathJax_SVG" id="MathJax-Element-3-Frame" role="textbox" aria-readonly="true" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 -738.9033013280564 451.5 770.8066026561128" style="width: 1ex; height: 1.778ex; vertical-align: -0.222ex; margin: 1px 0px;"><g stroke="black" fill="black" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#MJMATHI-3B4"></use></g></svg></span><script type="math/tex" id="MathJax-Element-3">\delta</script>；否则将熵插入到列表中。</li>
+<li><strong><span class="MathJax_Preview"></span><span class="MathJax_SVG" id="MathJax-Element-4-Frame" role="textbox" aria-readonly="true" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 -738.9033013280564 451.5 770.8066026561128" style="width: 1ex; height: 1.778ex; vertical-align: -0.222ex; margin: 1px 0px;"><g stroke="black" fill="black" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#MJMATHI-3B4"></use></g></svg></span><script type="math/tex" id="MathJax-Element-4">\delta</script>:熵的阈值，判断是否为可疑流量；K:连续窗口的个数，判断是否为攻击流量</strong></li>
+</ul><p data-anchor-id="yckk">（1）受害主机识别 <br>
+<a href="https://imgchr.com/i/VWC4cF" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWC4cF.th.png" alt="VWC4cF.th.png" title=""></a> <br>
+在数据库中找目的IP数量为K的即为受害者IP地址。因为要遍历数据库，所以时间和空间复杂度为<em>O(n)</em>。 <br>
+（2）确定攻击者位置 <br>
+<a href="https://imgchr.com/i/VWPfUI" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWPfUI.th.png" alt="VWPfUI.th.png" title=""></a> <br>
+在数据库中找到给受害者IP发送大量数据包（大于门限值C即可）的路径和端口。因为要遍历数据库，所以时间和空间复杂度为<em>O(n)</em>。 <br>
+（3）缓解策略 <br>
+<a href="https://imgchr.com/i/VWiBZj" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWiBZj.th.png" alt="VWiBZj.th.png" title=""></a> <br>
+设定控制器可以连接的半连接数为q。如果半连接数量到达q，就拒绝接入，直到有一个SYN-ACK释放了对应的资源。 <br>
+（4）门限值确定 <br>
+<a href="https://imgchr.com/i/VWF5jS" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWF5jS.th.png" alt="VWF5jS.th.png" title=""></a> <a href="https://imgchr.com/i/VWFTBQ" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWFTBQ.th.png" alt="VWFTBQ.th.png" title=""></a> <a href="https://imgchr.com/i/VWFxjU" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWFxjU.th.png" alt="VWFxjU.th.png" title=""></a> <br>
+通过对不同强度的流量测试，得到正常流量的熵服从正态分布，所以可以通过3<span class="MathJax_Preview"></span><span class="MathJax_SVG" id="MathJax-Element-5-Frame" role="textbox" aria-readonly="true" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 -452.9033013280564 572.5 485.80660265611283" style="width: 1.333ex; height: 1.111ex; vertical-align: -0.222ex; margin: 1px 0px;"><g stroke="black" fill="black" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#MJMATHI-3C3"></use></g></svg></span><script type="math/tex" id="MathJax-Element-5">\sigma</script>原则确定异常流量的门限值。</p><blockquote data-anchor-id="xutz" class="white-blockquote">
+  <p>实验</p>
+</blockquote><ul data-anchor-id="yl9a">
+<li>实验设置 <br>
+mininet v2.3.0dl,Open Switch v2.5.0,Floodlight v1.2,64 bit DPID(DataPathIdentifier) <br>
+<a href="https://imgchr.com/i/VWknDe" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWknDe.th.png" alt="VWknDe.th.png" title=""></a> <a href="https://imgchr.com/i/VWkwUs" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWkwUs.th.png" alt="VWkwUs.th.png" title=""></a></li>
+<li>性能评估 <br>
+场景1：攻击者数量确定为28，每个攻击者发送60-260个SYN数据包。 <br>
+<a href="https://imgchr.com/i/VWEahn" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWEahn.th.png" alt="VWEahn.th.png" title=""></a> <br>
+（1）平均检测时间：从接收第一个SYN数据包到检测到攻击的时间间隔。 <br>
+<a href="https://imgchr.com/i/VWEvgP" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWEvgP.th.png" alt="VWEvgP.th.png" title=""></a> <br>
+K越大，探测时间越长。 <br>
+（2）建立HTTP连接的平均时间 <br>
+<a href="https://imgchr.com/i/VWVF4s" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWVF4s.th.png" alt="VWVF4s.th.png" title=""></a> <br>
+（3）控制器CPU的平均利用率 <br>
+<a href="https://imgchr.com/i/VWVnDU" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWVnDU.th.png" alt="VWVnDU.th.png" title=""></a> <br>
+场景2：攻击者数量2-28，发送的SYN数据包数量均为100. <br>
+<a href="https://imgchr.com/i/VWZTFH" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWZTFH.th.png" alt="VWZTFH.th.png" title=""></a> <br>
+（1）平均检测时间 <br>
+<a href="https://imgchr.com/i/VWZO6P" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWZO6P.th.png" alt="VWZO6P.th.png" title=""></a> <br>
+（2）建立HTTP连接的平均时间 <br>
+<a href="https://imgchr.com/i/VWepkQ" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWepkQ.th.png" alt="VWepkQ.th.png" title=""></a> <br>
+（3）控制器CPU的平均利用率 <br>
+<a href="https://imgchr.com/i/VWeipn" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWeipn.th.png" alt="VWeipn.th.png" title=""></a> <br>
+场景3：测量ROC曲线 <br>
+平均流速率50Mbps,200-300攻击包/s;100Mbps,1000-1500攻击包/s。 <br>
+K=3，AC=2 <br>
+<a href="https://imgchr.com/i/VWeXC9" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWeXC9.th.png" alt="VWeXC9.th.png" title=""></a> <br>
+在高流量的情况下，更容易区别攻击流量和正常流量。 <br>
+场景4：没有攻击的情况下，各系统的时延。 <br>
+<a href="https://imgchr.com/i/VWm88s" target="_blank"><img src="https://s2.ax1x.com/2019/06/12/VWm88s.th.png" alt="VWm88s.th.png" title=""></a></li>
+</ul></div>
+</body>
+</html>
