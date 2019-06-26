@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>An efficient detection of TCP Syn flood attacks with spoofed IP addresses</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="97ek" id="an-efficient-detection-of-tcp-syn-flood-attacks-with-spoofed-ip-addresses">An efficient detection of TCP Syn flood attacks with spoofed IP addresses</h1><div class="md-section-divider"></div><h3 data-anchor-id="64ur" id="journal-of-intelligent-fuzzy-systems-35-2018-59835991">Journal of Intelligent &amp; Fuzzy Systems 35 (2018) 5983–5991</h3><p data-anchor-id="zib0"><code>论文</code></p><hr><p data-anchor-id="drlg">针对<strong>传统网络</strong>中假IP地址的检测，通过认证的方式，对SDN网络的借鉴意义不大。</p><blockquote data-anchor-id="mred" class="white-blockquote">
+  <h3 id="基本思路">基本思路</h3>
+</blockquote><p data-anchor-id="5bzs"><a href="https://imgchr.com/i/VbvgeK" target="_blank"><img src="https://s2.ax1x.com/2019/06/18/VbvgeK.png" alt="VbvgeK.png" title=""></a></p><p data-anchor-id="05wl">（1）客户端</p><ul data-anchor-id="vwb7">
+<li>安装agent，否则在访问网络时，会被重定向到安装agent的网页。</li>
+<li>在发送SYN数据包时，会在某些空余字段加入认证消息。空余字段包括以下：<a href="https://imgchr.com/i/Vbzc5D" target="_blank"><img src="https://s2.ax1x.com/2019/06/18/Vbzc5D.png" alt="Vbzc5D.png" title=""></a></li>
+<li>认证消息共104bit，包括本机的MAC地址、IP地址，以及对<strong>MAC地址、IP地址和本机与服务器成功连接的次数counter</strong>的加密。加密数据使用3个hash函数的bloom filter，然后将结果异或得到。 <br>
+<a href="https://imgchr.com/i/Vqgoo8" target="_blank"><img src="https://s2.ax1x.com/2019/06/18/Vqgoo8.png" alt="Vqgoo8.png" title=""></a></li>
+</ul><p data-anchor-id="z17q">（2）服务器端</p><ul data-anchor-id="2h0b">
+<li>为客户安装agent，并为之分配对应的加密密钥key。</li>
+<li>将客户信息记录在一个映射表中，包括<strong>用户的MAC地址、counter、密钥key</strong>。映射表存在数据库中，但是为了加快查找速度，一直装载在内存中。</li>
+</ul><blockquote data-anchor-id="e9fc" class="white-blockquote">
+  <h3 id="检测过程">检测过程</h3>
+</blockquote><p data-anchor-id="zfr2">服务器在接收到客户端的SYN数据包之后，进行以下检测： <br>
+<a href="https://imgchr.com/i/Vqr0SI" target="_blank"><img src="https://s2.ax1x.com/2019/06/18/Vqr0SI.png" alt="Vqr0SI.png" title=""></a></p><p data-anchor-id="eup3">（1）判断SYN数据包中是否存在认证数据，不存在就跳转到安装界面； <br>
+（2）如果存在认证数据，如果认证数据中的IP地址为全1，说明该主机的网卡信息发生变化，需对其重新安装agent； <br>
+（3）无论认证数据中的IP地址和SYN数据包中的IP地址是否相同，均继续进行MAC地址的认证；相同，（4）；不同，（6）； <br>
+（4）MAC地址在映射表中，需要对加密数据进行验证（5）；如果MAC地址不在映射表中，就认为认证信息为攻击者伪造的，就拒绝连接； <br>
+（5）如果对认证数据中的IP地址、MAC地址及映射表中的counter进行同样的加密操作之后，得到的Hash值与认证数据中的加密字段相同，则认证成功，该客户被认为是正常客户，并且两者的counter同步更新加1。 <br>
+（6）MAC地址在映射表中，就进行验证；如果MAC地址不在映射表中，就重定向到安装agent界面。如果验证成功，说明该客户使用NAT改变了IP地址，所以分类为在NAT环境下的正常用户；验证失败，说明该验证数据为攻击者伪造，就拒绝连接。</p><p data-anchor-id="7gh4">总之，需要验证【认证数据中的IP地址和SYN中的IP地址】、【认证数据中的MAC地址和映射表中的MAC地址】、【对认证数据中的IP地址、MAC地址及映射表中的counter进行同样的加密操作之后，得到的Hash值与认证数据中的加密字段】</p><blockquote data-anchor-id="vbam" class="white-blockquote">
+  <h3 id="实验">实验</h3>
+</blockquote><ul data-anchor-id="vyg8">
+<li>实验设置</li>
+</ul><table data-anchor-id="ssxi" class="table table-striped-white table-bordered">
+<thead>
+<tr>
+ <th style="text-align:center;">项目</th>
+ <th style="text-align:center;">主机</th>
+ <th style="text-align:center;">交换机</th>
+ <th style="text-align:center;">路由器</th>
+</tr>
+</thead>
+<tbody><tr>
+ <td style="text-align:center;">型号</td>
+ <td style="text-align:center;">Intel P4 930 3GHz,2GRAM and FreeBSD 6.2</td>
+ <td style="text-align:center;">Cisco Catalyst 2960 Series, Cisco Catalyst 3560 Series</td>
+ <td style="text-align:center;">Cisco 1800 Series, Cisco 1900 Series, Cisco 2800 Series</td>
+</tr>
+<tr>
+ <td style="text-align:center;">数量</td>
+ <td style="text-align:center;">20</td>
+ <td style="text-align:center;">-</td>
+ <td style="text-align:center;">6</td>
+</tr>
+</tbody></table><ul data-anchor-id="gotp">
+<li>实验结果 <br>
+（1）误报率：比较小 <br>
+<a href="https://imgchr.com/i/Vqb5gP" target="_blank"><img src="https://s2.ax1x.com/2019/06/18/Vqb5gP.png" alt="Vqb5gP.png" title=""></a></li>
+</ul><p data-anchor-id="gh6j">Type1：没有安装agent的主机；Type2：安装agent的主机；Type3：NAT环境下安装agent的主机；Type4：假数据包。</p><p data-anchor-id="lm5g">对比其它算法的误报率，是最小的。 <br>
+<a href="https://imgchr.com/i/VqqrPs" target="_blank"><img src="https://s2.ax1x.com/2019/06/18/VqqrPs.png" alt="VqqrPs.png" title=""></a></p><p data-anchor-id="n5jp">问题：SYN数据包中的对IP、MAC、counter的加密没有懂；对加密数据的验证也没有懂。</p></div>
+</body>
+</html>

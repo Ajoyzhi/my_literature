@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>DDoS Flooding Attack Detection Based on Joint-entropy with Multiple Traffic Features</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="fvx8" id="ddos-flooding-attack-detection-based-on-joint-entropy-with-multiple-traffic-features">DDoS Flooding Attack Detection Based on Joint-entropy with Multiple Traffic Features</h1><div class="md-section-divider"></div><h3 data-anchor-id="5uuf" id="2018-17th-ieee-international-conference-on-trust-security-and-privacy-in-computing-and-communications-12th-ieee-international-conference-on-big-data-science-and-engineering">2018 17th IEEE International Conference On Trust, Security And Privacy In Computing And Communications/ 12th IEEE International Conference On Big Data Science And Engineering</h3><p data-anchor-id="nndz"><code>论文</code></p><hr><p data-anchor-id="oyw5">本文即为普通的两个特征的熵计算，但是特征选取了flow duration，还比较新颖。</p><blockquote data-anchor-id="ixnc" class="white-blockquote">
+  <h3 id="特征选取">特征选取</h3>
+</blockquote><p data-anchor-id="kog7"><a href="https://imgchr.com/i/VziZ11" target="_blank"><img src="https://s2.ax1x.com/2019/06/21/VziZ11.png" alt="VziZ11.png"></a></p><p data-anchor-id="o7x0">（1）源地址欺骗</p><ul data-anchor-id="a5gg">
+<li>flow duration(流持续时间)：流的第一个数据包到达到最后一个数据包到达的时间间隔。攻击流一般只包含一个数据包，所以流的持续时间大多集中在0左右，其熵会变小。</li>
+<li>packet length(数据包长度)：ICMP/SYN攻击是，数据包长度会倾向于一个固定的值，所以当该熵变小时，可能是发生了攻击。</li>
+<li>destination port(目的端口)：UDP攻击一般是针对某个端口，如攻击DNS服务器的53号端口。</li>
+</ul><p data-anchor-id="p7pe">（2）非源地址欺骗 <br>
+* source IP(源IP)：源IP比较集中，熵变小，可能发生攻击。</p><blockquote data-anchor-id="iubz" class="white-blockquote">
+  <h3 id="算法设计">算法设计</h3>
+</blockquote><p data-anchor-id="wtr1"><a href="https://imgchr.com/i/VzFax1" target="_blank"><img src="https://s2.ax1x.com/2019/06/21/VzFax1.png" alt="VzFax1.png" title=""></a></p><p data-anchor-id="zl9k">count_table：记录属性f<sub>1</sub>、f<sub>2</sub>的值及对应个数，以便计算熵。 <br>
+pdt：属性f<sub>1</sub>、f<sub>2</sub>不同的值对应的概率。</p><blockquote data-anchor-id="cli1" class="white-blockquote">
+  <h3 id="实验">实验</h3>
+</blockquote><p data-anchor-id="y740">（1）实验设置 <br>
+Ryu、Mininet <br>
+服务器：四核2.30GHz Intel Core-i5 CPU、16 GB RAM running Ubuntu 14.04 <br>
+拓扑： <br>
+<a href="https://imgchr.com/i/VzksO0" target="_blank"><img src="https://s2.ax1x.com/2019/06/21/VzksO0.png" alt="VzksO0.png" title=""></a></p><p data-anchor-id="f1vn">（2）结果</p><ul data-anchor-id="44j9">
+<li>熵随时间的变化 <br>
+正常流量：CAIDA 2007数据库；异常流量：TFN2K。 <br>
+正常流量120s，在30s-90s时加入异常流量。</li>
+</ul><p data-anchor-id="k5th"><a href="https://imgchr.com/i/VzABND" target="_blank"><img src="https://s2.ax1x.com/2019/06/21/VzABND.png" alt="VzABND.png" title=""></a> <br>
+联合熵比单独熵的抖动更小，差异更大。</p><ul data-anchor-id="0vg3">
+<li>不同攻击密度下熵的平均下降</li>
+</ul><p data-anchor-id="fut6"><a href="https://imgchr.com/i/VzeQM9" target="_blank"><img src="https://s2.ax1x.com/2019/06/21/VzeQM9.png" alt="VzeQM9.png" title=""></a> <br>
+相同的攻击密度下，联合熵的下降最大，说明联合熵比其它两个对攻击更敏感。</p><ul data-anchor-id="tj8z">
+<li>检测速率和误报率</li>
+</ul><p data-anchor-id="fjo4"><a href="https://imgchr.com/i/VzmzcQ" target="_blank"><img src="https://s2.ax1x.com/2019/06/21/VzmzcQ.png" alt="VzmzcQ.png" title=""></a></p></div>
+</body>
+</html>

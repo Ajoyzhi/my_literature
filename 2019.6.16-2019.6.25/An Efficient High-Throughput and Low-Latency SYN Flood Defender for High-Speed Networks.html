@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>An Efficient High-Throughput and Low-Latency SYN Flood Defender for High-Speed Networks</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="y75r" id="an-efficient-high-throughput-and-low-latency-syn-flood-defender-for-high-speed-networks">An Efficient High-Throughput and Low-Latency SYN Flood Defender for High-Speed Networks</h1><div class="md-section-divider"></div><h3 data-anchor-id="c2zf" id="hindawi-security-and-communication-networks-volume-2018">Hindawi Security and Communication Networks Volume 2018</h3><p data-anchor-id="kok5"><code>论文</code></p><p data-anchor-id="f409">该论文主要提出一种硬件框架，实现为一个内核，可以放在传统网络中，也可以放在SDN中。但是其对SYNflood攻击的检测很简单，满足以下任意一个就说明发生攻击： <br>
+（1）SYN数据包在一个时间间隔内超过一个阈值； <br>
+（2）SYN和ACK数据包的差值超过一个阈值。</p><hr><blockquote data-anchor-id="ksjn" class="white-blockquote">
+  <h3 id="系统设计">系统设计</h3>
+</blockquote><p data-anchor-id="w8yw">这是放在一个芯片(FPGA)上的，5个处理过程分为5个阶段进行流水线处理，加快处理速度。 <br>
+<a href="https://imgchr.com/i/VX3i8O" target="_blank"><img src="https://s2.ax1x.com/2019/06/19/VX3i8O.png" alt="VX3i8O.png"></a></p><p data-anchor-id="qopp">（1）头部抽取：从数据包中抽取以后要用到的信息。同时维持一个计数器，记录数据包的个数。完整的数据包被缓存在FIFO中。 <br>
+（2）包分类器：通过TCP_flag分类SYN/ACK数据包。Index Gen为每个主机生成唯一的索引号，以便决策控制器识别主机；Cookie Gen生成cookie，以回复SYN-ACK。 <br>
+（3）检测器：实现算法1. <br>
+<a href="https://imgchr.com/i/VXtPjU" target="_blank"><img src="https://s2.ax1x.com/2019/06/19/VXtPjU.png" alt="VXtPjU.png"></a> <br>
+（4）决策控制器：实现算法2. <br>
+<a href="https://imgchr.com/i/VXtDbQ" target="_blank"><img src="https://s2.ax1x.com/2019/06/19/VXtDbQ.png" alt="VXtDbQ.png"></a> <br>
+发生攻击时，对于已知主机发送的SYN数据包直接转发；对于未知主机，直接回复SYN-ACK；如果为ACK数据包，验证确认号，通过验证，加入到已知主机列表，并发送RST。当该用户再次发送SYN数据包时，被当作已知用户，直接被转发。 <br>
+（5）数据包修改：修改在（4）中需要改动的数据包。</p><blockquote data-anchor-id="szyz" class="white-blockquote">
+  <h3 id="性能分析">性能分析</h3>
+</blockquote><p data-anchor-id="ulwi">（1）延迟：抽取数据包的时间/正常处理的时间 <br>
+N：不同长度的数据包的总个数。m：N个数据包按照长度分为m类。n<sub>i</sub>：第i类数据包的个数。L<sub>i</sub>：第i类数据包的长度。T<sub>max</sub>：没有防御系统时，客户和服务器的通道之间的最大吞吐量。 <br>
+故所有数据包到达目的服务器的最小时间为：负载总量/吞吐量 <br>
+<a href="https://imgchr.com/i/VjAPr8" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/VjAPr8.png" alt="VjAPr8.png"></a> <br>
+K：N中的SYN数据包。D：第一个数据包经历防御系统需要的始终周期数。f:硬件时钟频率。C：防御系统与未知用户握手时的负载值。 <br>
+故经过防御系统到达服务器的时间为： <br>
+<a href="https://imgchr.com/i/VjAKMV" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/VjAKMV.png" alt="VjAKMV.png"></a> <br>
+所以，延迟为： <br>
+<a href="https://imgchr.com/i/VjAaM6" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/VjAaM6.png" alt="VjAaM6.png"></a> <br>
+其中，f、D、C均和系统有关，所以，延迟只与N、L<sub>i</sub>、T<sub>max</sub>有关。 <br>
+（2）吞吐量：带宽情况 <br>
+W：每时钟周期可以接收的最大比特数，即带宽。L：数据包的byte数。H：一个固定常数，IPv4，值为4bytes。 <br>
+所以处理接收的数据包需要的时钟周期数为： <br>
+<a href="https://imgchr.com/i/VjEafs" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/VjEafs.png" alt="VjEafs.png"></a> <br>
+故接收所有数据包的最小时间间隔为：每类的数据包*每类处理需要的时钟周期，总的时钟周期/频率即为时间。 <br>
+<a href="https://imgchr.com/i/VjVpB8" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/VjVpB8.png" alt="VjVpB8.png"></a> <br>
+所以，防御系统接收和扫描所有数据包需要的总时间为： <br>
+<a href="https://imgchr.com/i/VjVl4J" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/VjVl4J.png" alt="VjVl4J.png"></a> <br>
+所以，其吞吐量为： <br>
+<a href="https://imgchr.com/i/VjVWVS" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/VjVWVS.png" alt="VjVWVS.png"></a> <br>
+当发生SYN flood攻击之后，攻击者会发送大量的数据包，D/f为常数可以忽略不计。故攻击时的吞吐量为： <br>
+<a href="https://imgchr.com/i/VjVHK0" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/VjVHK0.png" alt="VjVHK0.png"></a></p><blockquote data-anchor-id="lsv5" class="white-blockquote">
+  <h3 id="系统实现">系统实现</h3>
+</blockquote><p data-anchor-id="lxye">（1）传统网络中，在NetFPGA-10G上实现，其中包括Xilinx Virtex 5 xc5vtx240t设备，使用Verilog-HDL语言。可以确定W=256bits=32bytes。</p><ul data-anchor-id="ddxq">
+<li>头部抽取：共抽取64bytes数据，因为平台仅支持32bytes总线宽度，所以分为两个子模块进行。 <br>
+<a href="https://imgchr.com/i/Vjuwp4" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/Vjuwp4.png" alt="Vjuwp4.png" title=""></a></li>
+<li>IDG 1和2：根据源IP、目的IP为某用户生成特定的索引号，以便内核识别。</li>
+<li>CKG 1和2：生成cookie，在发生攻击时，替服务器给未知主机回复SYN-ACK，同时可以验证主机。 <br>
+<a href="https://imgchr.com/i/VjMYJU" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/VjMYJU.png" alt="VjMYJU.png" title=""></a></li>
+<li>检测器 <br>
+packet_counter：统计SYN/ACK数量；para：存储门限值；timer：计时，每一个时间间隔，比较SYN/ACK数据包。 <br>
+<a href="https://imgchr.com/i/Vjlfat" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/Vjlfat.png" alt="Vjlfat.png"></a></li>
+<li>决策控制器：2个子模块：控制器/已知用户列表(1024个条目)。</li>
+<li>包修改：主要是在攻击之下，对数据包的修改。 <br>
+<a href="https://imgchr.com/i/Vj3BcD" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/Vj3BcD.png" alt="Vj3BcD.png"></a></li>
+</ul><p data-anchor-id="duiz">（2）SDN网络：将此系统和该作者之前设计的一种交换机结构结合起来，描述并不是很详细。 <br>
+<a href="https://imgchr.com/i/VjdBg1" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/VjdBg1.png" alt="VjdBg1.png"></a></p><blockquote data-anchor-id="ozke" class="white-blockquote">
+  <h3 id="评估">评估</h3>
+</blockquote><p data-anchor-id="nzsc">（1）资源消耗：单纯的OF和实现此内核的交换机运行结果。 <br>
+<img src="https://s2.ax1x.com/2019/06/20/VjBJDP.png" alt="VjBJDP.png" title=""> <br>
+（2）吞吐量</p><ul data-anchor-id="vcfn">
+<li>SYN数据包大小固定，交换机最大吞吐量发生变化，安装core的实际吞吐量。 <br>
+<a href="https://imgchr.com/i/Vjr30P" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/Vjr30P.png" alt="Vjr30P.png"></a></li>
+<li>SYN数据包的大小发生变化，看实际吞吐量。 <br>
+<a href="https://imgchr.com/i/Vjci9O" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/Vjci9O.png" alt="Vjci9O.png"></a></li>
+</ul><p data-anchor-id="ymw8">（3）和分析模型的契合度 <br>
+<a href="https://imgchr.com/i/VjgoWT" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/VjgoWT.png" alt="VjgoWT.png"></a> <br>
+<a href="https://imgchr.com/i/Vjg7SU" target="_blank"><img src="https://s2.ax1x.com/2019/06/20/Vjg7SU.png" alt="Vjg7SU.png"></a></p><p data-anchor-id="ndgv">实现复杂，而且涉及到硬件，成本很高。</p></div>
+</body>
+</html>
