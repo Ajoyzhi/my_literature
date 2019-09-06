@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Overview of Environment Perception for Intelligent Vehicles</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="ed8v" id="overview-of-environment-perception-for-intelligent-vehicles">Overview of Environment Perception for Intelligent Vehicles</h1><p data-anchor-id="asha"><code>论文</code></p><hr><p data-anchor-id="m2vs">这篇论文主要讲智能车辆对环境的感知问题，有概念，有算法，有实验。我感觉讲得比较好。</p><div class="md-section-divider"></div><h3 data-anchor-id="llqi" id="1introduction"><strong>1、Introduction</strong></h3><ul data-anchor-id="9u7r">
+<li><p>智能车辆的4项基本技术： <br>
+<a href="https://imgchr.com/i/e1TORU" target="_blank"><img src="https://s2.ax1x.com/2019/07/29/e1TORU.png" alt="e1TORU.png"></a> <br>
+（1）环境感知和建模；（2）定位和地图映射；（3）路径规划和决策；（4）移动控制 <br>
+其中，最重要的问题是<strong>实时性</strong>。</p></li>
+<li><p>环境感知的基本流程 <br>
+<a href="https://imgchr.com/i/e17QFP" target="_blank"><img src="https://s2.ax1x.com/2019/07/29/e17QFP.png" alt="e17QFP.png"></a> <br>
+（1）从传感器接收原始数据；（2）建模提取特征；（3）根据语义分析流量目标；（4）利用上下文信息确定当前路况</p></li>
+</ul><div class="md-section-divider"></div><h3 data-anchor-id="c48j" id="2vehicular-sensors"><strong>2、Vehicular Sensors</strong></h3><p data-anchor-id="qez2">传感器：（1）内部传感器：发动机温度等；（2）外部传感器：感知周围环境</p><ul data-anchor-id="kdc1">
+<li>GPS：定位信息；在室内不可用。</li>
+<li>INS：导航系统；在没有外部参考时，可以提供定位和方向。</li>
+<li>雷达：目标探测系统；使用无线电波确定 <em>目标的范围、角度、方向</em> ；<em>对光照和天气不敏感</em> ；会有 <em>噪声</em> 。</li>
+<li>激光雷达(LiDAR)：障碍物检测；比雷达的噪声少、视野广；很好的感知方式。</li>
+<li>视觉(vision)：对光强度敏感；数据量大，视野广；照相机、低光夜视仪、红外夜视仪、立体视觉。</li>
+</ul><div class="md-section-divider"></div><h3 data-anchor-id="wmfo" id="3lane-and-road-detection"><strong>3、Lane and Road Detection</strong></h3><ul data-anchor-id="ga0g">
+<li>应用场景：（1）车道偏离：预测轨道；（2）自适应巡航控制：跟随具有安全前进方向的最近车辆；（3）在车道中间走；（4）安全变道。</li>
+<li>问题：（1）车道与道路形式多样；（2）图像清晰度；（3）能见度问题</li>
+<li>假设：（1）车道/道路texture(质地)一致；（2）车道/道路宽度一样；（3）道路标记严格遵守其外观设计标准和放置位置；（4）道路平坦或者严格遵守海拔变化模型。</li>
+<li>组成：（1）预处理：加强感兴趣的特征，减少杂波；（2）特征抽取：对车道/道路形状和走势的抽取；（3）模型拟合 <br>
+<img src="https://s2.ax1x.com/2019/07/29/e3AV4f.png" alt="e3AV4f.png" title=""></li>
+<li>数据库：<a href="http://www.vision.caltech.edu/malaa/datasets/caltech-lanes/" target="_blank">Caltech Lanes database</a></li>
+<li>实验结果： <br>
+（1）第一列为RANSAC算法【56】，第二列为基于模式特征的方法【58】，第三列为基于Hough转换的方法，第四列为基于B-Snake的算法【59】 <br>
+<a href="https://imgchr.com/i/e3Bt7d" target="_blank"><img src="https://s2.ax1x.com/2019/07/29/e3Bt7d.md.png" alt="e3Bt7d.md.png" title=""></a> <br>
+（2）正确率和误报率 <br>
+<a href="https://imgchr.com/i/e3DG80" target="_blank"><img src="https://s2.ax1x.com/2019/07/29/e3DG80.png" alt="e3DG80.png" title=""></a> <br>
+<strong>RANSAC具有最高的正确率和误报率；但是我感觉最好的应该为基于模式特征的方法。</strong></li>
+</ul><div class="md-section-divider"></div><h3 data-anchor-id="tvql" id="4traffic-sign-recognition"><strong>4、Traffic Sign Recognition</strong></h3><p data-anchor-id="hnri">交通图标分为：（1）图标；（2）文字图标。文字图标比图标需要更多的时间识别，所以现在主要是对<strong>图标</strong>的识别。<strong>但是交通标志的形式与国家有关。</strong> <br>
+<a href="https://imgchr.com/i/e3yLqO" target="_blank"><img src="https://s2.ax1x.com/2019/07/29/e3yLqO.png" alt="e3yLqO.png"></a></p><ul data-anchor-id="4vto">
+<li>影响识别的因素：（1）光线：天气问题；（2）背景：高速公路、林荫大道、街道、省道等；（3）场景中的其它目标：车、行人、雾等；（4）交通标志的不同外形：大小、角度、位置等；（5）长期暴晒：褪色；（6）测量：使用运动的测量工具导致的图像模糊。</li>
+<li><p>识别步骤：（1）分片：得到包含交通标志的区域；（2）特征抽取（3）检测 <br>
+<a href="https://imgchr.com/i/e355nA" target="_blank"><img src="https://s2.ax1x.com/2019/07/29/e355nA.png" alt="e355nA.png"></a></p></li>
+<li><p>数据库：（1）<a href="http://benchmark.ini.rub.de/?section=gtsrb&amp;subsection=dataset" target="_blank">German TSR Benchmark</a>；（2）<a href="http://www.vision.ee.ethz.ch/en/" target="_blank">KUL Belgium Trafﬁc Signs Data set</a>；（3）<a href="http://www.cvl.isy.liu.se/research/datasets/traf" target="_blank">Swedish Trafﬁc Signs Data set</a></p></li>
+<li>实验结果：200红灯，200绿灯，100黄灯训练；200：200：100验证 <br>
+<a href="https://imgchr.com/i/e3onMQ" target="_blank"><img src="https://s2.ax1x.com/2019/07/29/e3onMQ.png" alt="e3onMQ.png"></a> <br>
+<strong>SVM方法最好用。</strong></li>
+</ul><div class="md-section-divider"></div><h3 data-anchor-id="qche" id="5vehicle-detectiontracking-and-behavior-analysis"><strong>5、Vehicle Detection,Tracking and behavior analysis</strong></h3><ul data-anchor-id="1w31">
+<li>基本框架： <br>
+<a href="https://imgchr.com/i/e3oTW8" target="_blank"><img src="https://s2.ax1x.com/2019/07/29/e3oTW8.png" alt="e3oTW8.png" title=""></a></li>
+<li>详细介绍： <br>
+<a href="https://imgchr.com/i/e3xCUe" target="_blank"><img src="https://s2.ax1x.com/2019/07/29/e3xCUe.png" alt="e3xCUe.png"></a></li>
+<li>实验结果：使用KITTI数据集。红框是检测方法用于追踪；绿框是基于流的场景方法【157】；蓝框是基于L1的追踪器方法【158】；黄框是基于压缩追踪方法【159】。 <br>
+<a href="https://imgchr.com/i/e3zZW9" target="_blank"><img src="https://s2.ax1x.com/2019/07/29/e3zZW9.png" alt="e3zZW9.png"></a> <br>
+评价标准：到车中心线的距离。 <br>
+<a href="https://imgchr.com/i/e8SQcn" target="_blank"><img src="https://s2.ax1x.com/2019/07/29/e8SQcn.png" alt="e8SQcn.png"></a> <br>
+<strong>基于L1追踪器【158】的方法最好。</strong></li>
+</ul><div class="md-section-divider"></div><h3 data-anchor-id="kp9n" id="6sence-understanding"><strong>6、Sence Understanding</strong></h3><p data-anchor-id="z70w"><a href="https://imgchr.com/i/e8eSNn" target="_blank"><img src="https://s2.ax1x.com/2019/07/29/e8eSNn.png" alt="e8eSNn.png"></a></p><div class="md-section-divider"></div><h3 data-anchor-id="ddp1" id="7讨论"><strong>7、讨论</strong></h3><p data-anchor-id="4iwn">我感觉更像是总结。</p><ul data-anchor-id="jqvf">
+<li>特征总结 <br>
+<a href="https://imgchr.com/i/e8e3uD" target="_blank"><img src="https://s2.ax1x.com/2019/07/29/e8e3uD.png" alt="e8e3uD.png" title=""></a></li>
+<li>内容总结 <br>
+（1）车道检测中，不同的方法对应不同的假设；各种特征的融合可以达到一个比较好的效果；对于模型拟合，直线是短路线最好的模型，splines是对曲线路径比较好的模型。 <br>
+（2）交通标志识别中，分片方法主要依赖于颜色和形状，检测方法主要依赖于选择的特征；Hough变换及其变种广泛应用于目标检测；SVM、神经网络、级联分类器使用HOG或者Haar小波特征分类交通标志；缺少公开数据库。 <br>
+（3）追踪车辆轨迹中，要权衡精确度和计算的复杂性；移动和深度信息可以增加系统精确度；很少使用在路上行驶的车辆的信息。 <br>
+（4）深度学习和semantic Fisher vector在场景理解中可能会有大作用。</li>
+</ul></div>
+</body>
+</html>

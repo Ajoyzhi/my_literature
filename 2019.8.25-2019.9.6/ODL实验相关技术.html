@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ODL实验相关技术</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="ck89" id="odl实验相关技术">ODL实验相关技术</h1><p data-anchor-id="nan7"><code>实验</code></p><hr><p data-anchor-id="bvsa"><a href="https://imgchr.com/i/nKEa2F" target="_blank"><img src="https://s2.ax1x.com/2019/09/06/nKEa2F.png" alt="nKEa2F.png"></a></p><ul data-anchor-id="ml5w">
+<li>在Application层进行开发，即开发一个bundle/jar。该bundle使用Maven组织形式。SAL层的notification、RPC、YANG主要提供了Application层对交换机数据的访问。</li>
+<li>YANG属于北向接口的相关协议，可以解决控制器在同一地址空间内的应用之间的访问。（RESTConf = REST API解决控制器在不同地址空间内应用之间的访问）</li>
+<li>南向接口（实验中为OpenFlow协议）使用的是ODL自身的OpenFlow项目，即在ODL控制器中安装openflowplugin  feature，则控制器和交换机通信使用OpenFlow协议。</li>
+</ul><p data-anchor-id="vowv">1、<a href="http://www.osgi.com.cn/article/7289520" target="_blank">OSGi</a>：可以实现ODL动态地加载bundles和数据包JAR文件。 <br>
+2、Maven <br>
+（1）详见<a href="https://app.yinxiang.com/fx/a8ae3892-f1dc-44e5-84d4-e7f91bcd0f1d" target="_blank">印象笔记</a> <br>
+（2）相关的学习材料：</p><ul data-anchor-id="5uui">
+<li><a href="https://study.163.com/course/courseMain.htm?courseId=1005828004&amp;_trace_c_p_k2_=d21ad38736164bbd97f021b8eedf8de3" target="_blank">maven视频课程</a></li>
+<li><a href="https://www.cnblogs.com/xdp-gacl/tag/Maven学习总结/" target="_blank">maven图文教程</a></li>
+<li><a href="http://maven.apache.org/" target="_blank">maven官网</a>：有什么重要的问题还是去官网比较好。</li>
+</ul><p data-anchor-id="pb3i">3、YANG模型 <br>
+（1）<a href="https://app.yinxiang.com/fx/d1559162-2be9-4c38-b521-dbdf469304d0" target="_blank">notification</a> <br>
+（2）<a href="https://app.yinxiang.com/fx/f5babce0-e503-4c94-b6b1-5fae5549013b" target="_blank">RPC</a> <br>
+（3）<a href="https://app.yinxiang.com/fx/ff1cb1c0-eb94-4e6b-96a7-863d488a490e" target="_blank">datastore</a></p></div>
+</body>
+</html>

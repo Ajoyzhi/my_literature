@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>packetin项目问题记录</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="r0v1" id="packetin项目问题记录">packetin项目问题记录</h1><p data-anchor-id="7lmu"><code>实验</code></p><hr><ul data-anchor-id="3b51">
+<li><p>问题1：将自建的maven项目导入到eclipse中，总会报错。部分报错如下： <br>
+<a href="https://imgchr.com/i/ebCSC6" target="_blank"><img src="https://s2.ax1x.com/2019/08/09/ebCSC6.png" alt="ebCSC6.png" title=""></a> <br>
+解决办法：重新打开eclipse之后，关闭当前项目，导入另外的项目，eclipse会检测，然后提示错误，并安装对应的插件。 <br>
+<img src="https://s2.ax1x.com/2019/08/09/ebCp8K.png" alt="ebCp8K.png" title=""></p></li>
+<li><p>问题2：在/impl/src/main/java中加入相关代码，提示"头部与/[]*不符"，并将错误指向首行package。 <br>
+解决办法：为了规范代码，需要checkstyle工具，同时定义相关的规则。该问题是由于规则中定义每个java文件开头都要注明作者和文件作用，即以/**/开头即可。</p></li>
+<li><p>问题3：在InventoryUtility.java中的firstKeyOf函数报错。 <br>
+<a href="https://imgchr.com/i/mvw5AU" target="_blank"><img src="https://s2.ax1x.com/2019/08/31/mvw5AU.png" alt="mvw5AU.png" title=""></a> <br>
+解决办法：主要是有些包导错了，修改导入“import org.opendaylight.yang.gen.v1.urn.opendaylight.inventory.rev130819.nodes.Node;”。</p></li>
+<li><p>问题4： <img src="https://s2.ax1x.com/2019/08/31/mxDwZt.png" alt="mxDwZt.png" title=""> <br>
+这不是什么主要问题，在终端输入“mvn clean install -DskipTest”，也可以编译通过。</p></li>
+</ul></div>
+</body>
+</html>

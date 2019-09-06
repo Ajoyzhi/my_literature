@@ -1,0 +1,85 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Multisensor data fusion: A review of the state-of-the-art</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="256k" id="multisensor-data-fusion-a-review-of-the-state-of-the-art">Multisensor data fusion: A review of the state-of-the-art</h1><p data-anchor-id="gblw"><code>论文</code></p><hr><p data-anchor-id="gtmd">本论文针对源数据的缺陷进行分类，然后针对每类缺陷数据描述可能的解决算法。条理清楚，但是需要对数据融合中的算法有基本了解。所以，我对于算法描述部分直接跳过，找博客进行了解。</p><div class="md-section-divider"></div><h3 data-anchor-id="04y6" id="challenging-problem-of-multisensor-data-fusion"><strong>Challenging problem of multisensor data fusion</strong></h3><ul data-anchor-id="ka3q">
+<li>数据缺陷：数据的不确定性和不精确性。融合系统需要处理噪声和数据冗余。</li>
+<li>异常值和虚假数据：数据的歧义和不一致。</li>
+<li>冲突数据：要特别小心处理冲突数据，尤其在使用D-S推理方法时，因为可能会出现悖论。</li>
+<li>数据形态：来自相同传感器的同构数据和来自不同传感器的异构数据。</li>
+<li>数据关联(依赖)：处理数据之间的关联。</li>
+<li>数据校准/注册：将传感器本地的数据格式转换为一般格式，同时校准单个传感器的错误；数据注册？</li>
+<li>处理框架：中心化/去中心化。</li>
+<li>操作时间：时间同步问题。</li>
+<li>静态/动态数据：静态数据的更新问题；动态数据的融合问题。</li>
+<li>数据维度：数据预处理问题，本地或者全局融合。</li>
+</ul><p data-anchor-id="up1a"><strong>没有哪一种数据融合算法可以解决所有问题。</strong></p><div class="md-section-divider"></div><h3 data-anchor-id="6h6j" id="multisensor-data-fusion-algorithms"><strong>Multisensor data fusion algorithms</strong></h3><p data-anchor-id="k071">数据分类：按照数据缺陷分类 <br>
+<a href="https://imgchr.com/i/eNsq2Q" target="_blank"><img src="https://s2.ax1x.com/2019/07/31/eNsq2Q.png" alt="eNsq2Q.png" title=""></a> <br>
+（1-1）不确定数据：置信度&lt;1。 <br>
+（1-2）不精确：数据与多个目标相关。 <br>
+（1-3）粒度：相互区别的能力。 <br>
+（1-2-1）模糊：该属性没有定义准确，属性值也没有定义准确，比如“塔很高”。 <br>
+（1-2-2）歧义：该属性已经定义准确，但是属性值定义得不精确，比如“物体位置在[2,5]”。 <br>
+（1-2-3）不完备：数据丢失。</p><ul data-anchor-id="mmjz">
+<li>对缺陷数据的融合 <br>
+<a href="https://imgchr.com/i/eUeY2d" target="_blank"><img src="https://s2.ax1x.com/2019/08/01/eUeY2d.png" alt="eUeY2d.png" title=""></a></li>
+</ul><table data-anchor-id="2oge" class="table table-striped-white table-bordered">
+<thead>
+<tr>
+ <th style="text-align:center;">框架</th>
+ <th style="text-align:center;">描述</th>
+ <th style="text-align:center;">特点</th>
+ <th style="text-align:center;">局限</th>
+</tr>
+</thead>
+<tbody><tr>
+ <td style="text-align:center;">概率融合</td>
+ <td style="text-align:center;">在贝叶斯框架下，用概率分布表示数据的不确定性</td>
+ <td style="text-align:center;">框架成熟</td>
+ <td style="text-align:center;">不能解决其它缺陷数据</td>
+</tr>
+<tr>
+ <td style="text-align:center;">证据推理</td>
+ <td style="text-align:center;">使用置信度和D-S规则融合</td>
+ <td style="text-align:center;">可以表示不确定和有歧义的数据融合</td>
+ <td style="text-align:center;">不能处理其它方面的数据缺陷，并且对高冲突数据无效</td>
+</tr>
+<tr>
+ <td style="text-align:center;">模糊推理</td>
+ <td style="text-align:center;">使用模糊隶属度表示模糊数据，使用模糊规则融合</td>
+ <td style="text-align:center;">处理模糊数据的直观方法，可疑处理软数据</td>
+ <td style="text-align:center;">只可以处理模糊数据</td>
+</tr>
+<tr>
+ <td style="text-align:center;">粗糙集理论</td>
+ <td style="text-align:center;">使用估计上界和下界的方式处理歧义数据，使用经典的集合理论操作</td>
+ <td style="text-align:center;">不需要任何先验知识或额外的信息</td>
+ <td style="text-align:center;">需要数据粒度级别</td>
+</tr>
+<tr>
+ <td style="text-align:center;">混合方式</td>
+ <td style="text-align:center;">可以处理更复杂的缺陷数据</td>
+ <td style="text-align:center;">各融合框架相互补充</td>
+ <td style="text-align:center;">额外的计算负载</td>
+</tr>
+<tr>
+ <td style="text-align:center;">随机集理论</td>
+ <td style="text-align:center;">依赖测量/状态空间的随机子集表示缺陷数据的各方面</td>
+ <td style="text-align:center;">可为缺陷数据的融合提供一个统一的框架</td>
+ <td style="text-align:center;">比较新的理论，在数据融合领域初见苗头</td>
+</tr>
+</tbody></table><ul data-anchor-id="8l2k">
+<li><p>对相关数据的融合 <br>
+<a href="https://imgchr.com/i/eUlpJf" target="_blank"><img src="https://s2.ax1x.com/2019/08/01/eUlpJf.png" alt="eUlpJf.png" title=""></a></p></li>
+<li><p>对不一致数据的融合 <br>
+<a href="https://imgchr.com/i/eU3oiq" target="_blank"><img src="https://s2.ax1x.com/2019/08/01/eU3oiq.png" alt="eU3oiq.png" title=""></a></p></li>
+<li><p>对不同数据的融合：对异构数据的融合 <br>
+（1）软数据：人为产生的数据；多为自然语言，需要进一步地处理，才可以和硬数据融合。 <br>
+（2）硬数据：机器产生的数据。 <br>
+（3）以人为中心的数据融合。</p></li>
+</ul><div class="md-section-divider"></div><h3 data-anchor-id="6j7h" id="dicussion-and-remarks"><strong>Dicussion and remarks</strong></h3><p data-anchor-id="kci5"><a href="https://imgchr.com/i/eUb7l9" target="_blank"><img src="https://s2.ax1x.com/2019/08/01/eUb7l9.png" alt="eUb7l9.png" title=""></a></p></div>
+</body>
+</html>

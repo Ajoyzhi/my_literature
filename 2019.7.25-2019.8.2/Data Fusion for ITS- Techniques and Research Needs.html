@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Data Fusion for ITS: Techniques and Research Needs</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="u9qz" id="data-fusion-for-its-techniques-and-research-needs">Data Fusion for ITS: Techniques and Research Needs</h1><p data-anchor-id="zkas"><code>论文</code></p><hr><p data-anchor-id="n4h0">ITS：Intelligent transportation system 智能交通系统</p><p data-anchor-id="lw76">文章内容只读懂了70%左右，其中涉及到ITS具体应用的部分就没有读太明白，只能摘取共性问题进行总结。</p><p data-anchor-id="cyud">1、定义(Joint Directors of Laboratories:实验室主任联合会议，常用)</p><ul data-anchor-id="hu0c">
+<li>a multilevel, multifaceted process dealing with the automatic detection, association, correlation, estimation, and combination of data and information from single and multiple sources to achieve refined position and identity estimates, and complete and timely assessments of situations and threats and their significance.</li>
+<li>信息融合是一种多层次、多方面的数据处理过程，多来自多个数据源的数据进行自动检测、关联、相关、估计以及组合等处理，以实现精确的定位和身份估计，并对当前情况和威胁及其重要性进行全面和及时的评估。</li>
+</ul><p data-anchor-id="070l">2、模型--JDL模型 <br>
+该模型分为5级，但是有希望扩展为6级。</p><ul data-anchor-id="spey">
+<li>0级：<strong>数据预处理</strong>，包括归一化(nomalize)、格式化(format)、排序(order)、成批量(batch)、压缩(compass)；识别1级可能要使用的子目标或者特征。  </li>
+<li>1级：根据“数据级融合”结果定义<strong>目标评估</strong>。</li>
+<li>2级：结合1级的结果和数据库中的内容对当前情况进行评估，即<strong>态势评估</strong>。</li>
+<li>3级：对流量模式可能造成影响的事件进行评估，即<strong>威胁评估</strong>。</li>
+<li>4级：通过对预测结果进行评估，以优化整个数据融合的处理过程，即<strong>过程优化</strong>。</li>
+<li>(5级)：通过人的认知优化融合结果，即<strong>用户优化</strong>。 </li>
+</ul><p data-anchor-id="3iu8">3、框架</p><p data-anchor-id="5p8x"><a href="https://imgchr.com/i/euQMZR" target="_blank"><img src="https://s2.ax1x.com/2019/07/26/euQMZR.png" alt="euQMZR.png" title=""></a></p><p data-anchor-id="u2ek">（1）传感器级 + 决策级：单个传感器检测、分类、识别并对目标进行状态评估之后，合并单个传感器信息以提高对状态评估的准确度。 <br>
+（2）中央级 + 像素级：将传感器数据直接传入融合中心进行融合。 <br>
+（3）混合级：对于不同种类的数据采用不同的处理方法。 <br>
+<strong>个人认为，本框架不如  数据级融合-&gt;特征级融合-&gt;决策级融合  好。虽然两者有类似的地方，但是本框架结构不够清晰。</strong></p><p data-anchor-id="2dog">4、ITS数据融合的机遇与挑战 <br>
+问题1：基本车流数据和探测车辆数据的融合 <br>
+（1）基本车流数据</p><ul data-anchor-id="33h6">
+<li>包括内容：规模、道路占用情况(occupancy)、速度等数据。</li>
+<li>形式：点数据</li>
+<li>探测设备：路面传感器-&gt;电感环路检测器(inductive loop detector)</li>
+<li>特点：可以收集到基本的车流数据；只能提供定点的、与时间相关的信息，空间相关的信息不能提供；大面积覆盖的化部署和维护的成本会高。</li>
+</ul><p data-anchor-id="3znw">（2）探测车辆数据 <br>
+* 探测设备：道路车辆 <br>
+* 特点：与流量管理中心(TMC)通过无线网络连接，实时反馈流量信息。</p><p data-anchor-id="6wer">问题2：对异构数据的融合</p><ul data-anchor-id="84ml">
+<li>时间：源数据的收集要针对相同的时间段。</li>
+<li>空间：源数据的收集要针对同一块区域。</li>
+</ul><p data-anchor-id="cat2">机遇1：融合算法发展得比较好。</p><p data-anchor-id="ocu2">5、ITS中的信息融合应用：高级交通管理系统、自动意外检测、网络管理、高级旅行者信息系统、高级驾驶者助手、车流量需求评估、流量预测和监控、精确定位评估</p><p data-anchor-id="o5xy">（1）主要对<strong>环路探测器数据</strong>和<strong>探测车辆数据</strong>进行融合。 <br>
+（2）融合方法主要采用<strong>按权相加</strong>的方法。权值按照<strong>方差-协方差估计错误</strong>计算。并未详细说明。 <br>
+（3）精确定位评估</p><ul data-anchor-id="0qu9">
+<li>INS(Inertial Navigation system)使用航位推测法定位。问题：加速度和角速度的小误差会累积为大误差。</li>
+<li>GPS，通过卫星定位。问题：卫星信号被建筑物遮挡或者存在电磁干扰。</li>
+<li>将INS和GPS数据进行融合以精确定位。<strong>卡尔曼滤波</strong></li>
+</ul><p data-anchor-id="ui0y">6、数据融合算法的选择 <br>
+仍为一个比较困难的问题，但是要根据<strong>系统资源</strong>和<strong>算法输入的参数</strong>进行选择。</p><ul data-anchor-id="jnzd">
+<li>算法输入参数：贝叶斯算法需要概率密度分布；DS推断需要概率质量。</li>
+</ul><p data-anchor-id="p5a7">7、未来需求 <br>
+（1）输入数据的可信度</p><ul data-anchor-id="gyz0">
+<li>支持输入信息的独立源的个数</li>
+<li>独立源的可信度</li>
+<li>与已知的/先验信息是否冲突(冲突与否由评估因子决定)</li>
+</ul><p data-anchor-id="k1cb">（2）评估信息融合系统（全面）</p><ul data-anchor-id="jmfd">
+<li>达到融合目标</li>
+<li>完成融合任务的效率和资源的利用情况</li>
+<li>矩阵评估：单目标（轨迹精确度，轨迹协方差的一致性，轨迹抖动，轨迹评估偏差，轨迹的连续性）；多目标（错过目标的平均数量，average number of extra targets average track initiation time，完成的历史记录，跨平台的共性历史）</li>
+</ul><p data-anchor-id="10fp">（3）数据库管理 <br>
+现在的数据库主要为应用的灵活性，而非实时性。主要困难在于：</p><ul data-anchor-id="jelg">
+<li>数据种类多，而且数据量大</li>
+<li>对于新来的传感器数据和融合结果缺少快速更新的支持</li>
+<li>灵活、对用户友好的接口比较少</li>
+<li>在快速的传感器数据和人为操作之下还要维护数据库的ADIC原则</li>
+</ul><p data-anchor-id="jgk2">（4）在最坏的情况下的设计 <br>
+对各种参数要求比较高，精确度也比较高。</p><div class="md-section-divider"></div><h3 data-anchor-id="1n2e" id="总结its中的数据融合"><strong>总结</strong>：ITS中的数据融合</h3><ul data-anchor-id="7shq">
+<li>源数据主要是 <strong>路边传感器数据</strong> 和 <strong>探测车辆数据</strong>(周围车辆通信数据)。</li>
+<li>针对不同的应用用不同的数据融合的方法，或者说每个融合算法都有优缺点，要针对<strong>融合需求</strong>和<strong>算法特点</strong>进行选择。</li>
+<li>融合过程中要解决<strong>时空同步</strong>的问题。</li>
+</ul></div>
+</body>
+</html>
