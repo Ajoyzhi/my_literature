@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>A Taxonomy of DDoS Attack and DDoS Defense Mechanisms</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="6zfb" id="a-taxonomy-of-ddos-attack-and-ddos-defense-mechanisms">A Taxonomy of DDoS Attack and DDoS Defense Mechanisms</h1><div class="md-section-divider"></div><h3 data-anchor-id="o3y3" id="acm-sigcomm-computer-communications-reviewvolume-34-number-2-april-2004">ACM SIGCOMM Computer Communications Review，Volume 34, Number 2: April 2004</h3><p data-anchor-id="h2ac"><code>论文</code></p><hr><p data-anchor-id="eg11">本论文主要是对 <strong>传统网络</strong> DDoS攻击中的攻击手段与防御手段进行分类，分类之中还有分类，形成了一个复杂的树状结构。</p><p data-anchor-id="6un9">一、DDoS攻击</p><p data-anchor-id="oe4t">1、目的：阻止对服务的合法使用。 <br>
+2、手段</p><ul data-anchor-id="hdcg">
+<li>攻击者发送 <strong>大量数据包</strong> 给受害者，占用资源，使受害者无法为合法用户提供服务；</li>
+<li>攻击者发送 <strong>异常数据包</strong> 给受害者，使受害者宕机；</li>
+<li>破坏网络中的设备，使合法用户不能从该网络得到合法服务。</li>
+</ul><p data-anchor-id="54p3">3、DDoS攻击发生的原因</p><ul data-anchor-id="qg2m">
+<li>网络安全在很大程度上相互依赖；</li>
+<li>网络资源有限；</li>
+<li>智能和资源没有被合理分配：中间网络为中高带宽链路，可能被攻击者利用；</li>
+<li>不强制承担责任：假IP；</li>
+<li>分布式控制。</li>
+</ul><p data-anchor-id="wwmj">4、攻击过程</p><ul data-anchor-id="czce">
+<li>招募代理机；</li>
+<li>感染代理机；</li>
+<li>发动攻击：一般都会隐藏源IP地址。</li>
+</ul><p data-anchor-id="qhxz">5、分类</p><p data-anchor-id="20mb"><a href="https://imgchr.com/i/nOALge" target="_blank"><img src="https://s2.ax1x.com/2019/09/19/nOALge.png" alt="nOALge.png"></a></p><ul data-anchor-id="pn5k">
+<li>CM-1：直接通信中，master将假IP地址硬编码到攻击代码中，并安装到slave中；但是当发现一个slave，就可以找到master。</li>
+<li>CM-2：间接通信中，有一个被攻击的服务器作为master。</li>
+<li>PM-1：在受害主机妥协之后，攻击代码从一个 <strong>中心下载</strong> 。</li>
+<li>PM-2：攻击代码从被攻击的主机上下载，形成一个 <strong>链式</strong> 。</li>
+<li>PM-3：攻击代码 <strong>直接安装</strong> 到目标主机上。</li>
+<li>EW-1：语义攻击，即利用协议/应用的实现漏洞进行攻击。</li>
+<li>EW-2：蛮力攻击，即通过发送大量数据包使服务不可得。</li>
+<li>AR-1：可路由的源地址，即占用别人的地址。<strong>主机可达</strong></li>
+<li>AR-2：不可路由的源地址，占用私用地址或者使用已分配但未使用的地址。<strong>主机不可达</strong></li>
+<li>ST-3：En route假源地址，是指使用代理机到受害者沿途的主机的地址。但是还没出现过这种攻击。</li>
+<li>ST-4：固定假源地址，主要是为了嫁祸给被使用的IP地址。</li>
+<li>RAVS-1：filter，即使用非需要的数据包进行攻击，比如服务器只能接收回复DNS的UDP数据包，如果使用UDP数据包攻击53号端口记为此种攻击。</li>
+<li>RAVS-2：non-filter，即使用可能使用到的数据包进行攻击，比如使用TCP数据包攻击80端口，服务器无法区分是正常数据包还是异常数据包。</li>
+<li>PSA-1：constant agent set，slave组一直活跃。</li>
+<li>PSA-2：variable agent set，slave分组活跃，在某一时间只有一个组的slave活跃。</li>
+</ul><div class="md-section-divider"></div><h4 data-anchor-id="o2yj" id="自己设计的防御系统主要针对蛮力攻击ew-2假源地址sav-1可特征化pc-1对受害者造成的影响是突发的iv-1"><strong>自己设计的防御系统主要针对：蛮力攻击(EW-2)、假源地址(SAV-1)、可特征化(PC-1)、对受害者造成的影响是突发的(IV-1)。</strong></h4><p data-anchor-id="j2ht">二、DDoS防御</p><p data-anchor-id="sf25">1、挑战</p><ul data-anchor-id="3f3p">
+<li>在网络中需要一个分布式的反馈，但是网络结构不允许；</li>
+<li>中间网络需要部署防御软件，但是需要代价；</li>
+<li>缺少攻击的详细信息：不同类型服务的攻击频率；攻击参数的分布（速率、攻击的持续时间、时间、数据包大小、slave数量、效率、攻击的破坏程度等）；</li>
+<li>缺少防御系统的统一评价标准；</li>
+<li>很难进行大规模的性能测试，有时小规模的实验结果不太可靠。</li>
+</ul><p data-anchor-id="4ekq">2、分类 <br>
+<a href="https://imgchr.com/i/nOAq3D" target="_blank"><img src="https://s2.ax1x.com/2019/09/19/nOAq3D.png" alt="nOAq3D.png"></a></p><ul data-anchor-id="t1f3">
+<li>ST-1：保护系统安全，主要是对主机的保护，避免成为slave。</li>
+<li>ST-2：保护协议安全，主要是对协议中的漏洞、歧义进行消除。</li>
+<li>PM-1：资源审计，即对流量验证成功后再分配资源。</li>
+<li>PM-2：设置冗余资源。</li>
+<li>ADS-1：模式检测，将已知攻击的模式特征存储到数据库中，匹配并更新。但是只能处理已知攻击。</li>
+<li>NBS-1：标准特征检测，即使用一些规定的特征，例如三次握手中的半连接。</li>
+<li>NBS-2：训练出的特征。其中 <strong>阈值设定</strong> 和 <strong>模型更新</strong> 是两个问题。</li>
+<li>CD-1：在部署的地方独立防御。</li>
+<li>CD-2：在部署的地方独立防御，并且可以和其他实体协作。</li>
+<li>CD-3：不能在独立的部署点自动执行，要和其他的实体协作。</li>
+</ul></div>
+</body>
+</html>
