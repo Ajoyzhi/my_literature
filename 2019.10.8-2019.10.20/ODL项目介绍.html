@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>ODL项目介绍</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="nyhg" id="odl项目介绍">ODL项目介绍</h1><p data-anchor-id="5xwp"><code>实验</code></p><hr><p data-anchor-id="87o9"><strong>我们实验中使用的ODL版本为oxygen。</strong> <br>
+参考《OpenDayLight应用指南》 <br>
+相关学习内容： <br>
+ <a href="https://tonydeng.github.io/sdn-handbook/sdn/controller/odl/projects.html" target="_blank">https://tonydeng.github.io/sdn-handbook/sdn/controller/odl/projects.html</a></p><div class="md-section-divider"></div><h4 data-anchor-id="u2y2" id="yang-tools"><strong>YANG TOOLS</strong></h4><p data-anchor-id="xob1">1、两个作用，一是将YANG文件映射为JAVA文件，二是将YANG自动转换为ODL的Maven plugin。当前版本在项目创建之处，就自动加入相关代码，可以直接使用YANG TOOLS实现以上作用。</p><p data-anchor-id="e29k">2、开发流程 <br>
+<img src="https://s2.ax1x.com/2019/10/09/u5GB3d.png" alt="u5GB3d.png" title=""></p><p data-anchor-id="u0xi">（1）编写YANG模型，使用YANG Tools将YANG转换为API代码； <br>
+（2）直接使用Mavenue build tools 生成API bundles（即接口部分）； <br>
+（3）根据API部分，编写插件的具体实现，编译生成plugin bundle（即实现部分）； <br>
+（4）将前面生成的接口部分和实现部分发布到Controller 的plugins 文件夹中。</p><div class="md-section-divider"></div><h4 data-anchor-id="yyi6" id="openflow-project"><strong>OpenFlow Project</strong></h4><p data-anchor-id="tzgb">需要自己额外加入代码，实现对该项目的加载。 <br>
+1、ODL中OpenFlow项目的实现分为两部分：</p><ul data-anchor-id="fsap">
+<li>OpenFlowJava：负责向 <strong>南向设备</strong> 完成OpenFlow协议的序列化、反序列化、端口监听以及消息收发。</li>
+<li>OpenFlowPlugin：负责完成OpenFlow协议的状态管理、会话管理、事件处理等，向 <strong>SAL层</strong> 提供服务。</li>
+</ul><p data-anchor-id="iojr"><img src="https://s2.ax1x.com/2019/10/09/uItvpF.png" alt="uItvpF.png" title=""></p><p data-anchor-id="md8k">2、packet-in消息的处理 <br>
+<img src="https://s2.ax1x.com/2019/10/09/uIavp8.jpg" alt="uIavp8.jpg" title=""> <br>
+详见下一部分。</p><div class="md-section-divider"></div><h4 data-anchor-id="xmvh" id="l2switch"><strong>L2Switch</strong></h4><p data-anchor-id="8h2u">需要自己额外加入代码，实现对该项目的加载。 <br>
+1、该模块主要负责MAC地址学习和数据转发决策。其中包括的服务：</p><ul data-anchor-id="9vj2">
+<li>包处理服务：当MD-SAL接收到新数据包时，该服务将接收新包通知，然后解析。在解析完成之后，向MD-SAL发送相应的处理通知。例如，该服务解析得到ARP数据包，则向MD-SAL发送ARP数据包的处理通知；</li>
+<li>ARP处理服务：当监听到包处理服务发布的ARP数据包处理通知时，该服务负责处理解析后的ARP消息，并产生包含ARP广播的packet-out消息；</li>
+<li>流表下发服务：当监听到包处理服务发布的流表下发通知时，该服务负责向MD-SAL的DataStore添加流表项；</li>
+<li>地址跟踪服务：当监听到包处理服务发布的数据包处理通知时，该服务负责将MAC地址和端口的映射关系保存并更新MD-SAL的DataStore中的数据；</li>
+<li>主机跟踪服务：当监听到节点通知时，该服务将更新DataStore中的拓扑数据；</li>
+<li>环路消除服务：当监听到链路通知时，该服务将使用STP消除网络回路。</li>
+</ul><p data-anchor-id="rmon"><strong>其它服务均监听包处理服务的解析结果，监听过程中，cue到哪个服务，哪个服务就执行对应操作。</strong></p><p data-anchor-id="593h">2、L2Switch和OpenFlow两个模块紧密相关，因为L2Switch通过OpneFlow协议和交换机进行通信，所以两者在packet-in数据包的处理流程中可以总结为以下： <br>
+<a href="https://imgchr.com/i/uTlDUO" target="_blank"><img src="https://s2.ax1x.com/2019/10/10/uTlDUO.png" alt="uTlDUO.png" title=""></a></p><p data-anchor-id="goaf">（1）当交换机遇到无法识别或者需要上报的数据包，通过与OpenFlowJava建立的连接，向控制器发送消息，即为packet-in消息； <br>
+（2）OpenFlowJava库对该数据包进行解析，然后将解析后的结果交给OpenFlowPlugin； <br>
+（3）OpenFlowPlugin将接收到的消息转发给MD-SAL中的新包通知；L2Switch中的数据包处理模块一直监听MD-SAL中的新包通知模块； <br>
+（4）MD-SAL中的新包通知将数据包传递给L2Switch中的数据包处理模块； <br>
+（5）数据包处理模块接收到新包之后解析，并将解析后的数据包封装为相应的处理通知，发布（publish）给MD-SAL； <br>
+（6-1）当监听到包处理服务发布的流表下发通知时，调用L2Swtich中的流表下发模块； <br>
+（6-2）当监听到包处理服务发布的ARP数据包处理通知时，调用L2Swtich中的ARP处理模块； <br>
+OpenFlowPlugin找到该消息对应的会话，然后传递给OpenFlowJava； <br>
+（6-3）当监听到包处理服务发布的数据包处理通知时，调用L2Swtich中的地址跟踪模块； <br>
+OpenFlowJava将消息序列化之后，通过与交换机的网络连接将消息发送出去； <br>
+（6-4）当监听到节点通知时，调用L2Swtich中的主机跟踪模块； <br>
+（6-5）当监听到链路通知时，调用L2Swtich中的环路消除模块； <br>
+（7-1）流表下发服务在DataStore中存储流表项； <br>
+（7-2）ARP处理服务将ARP报文封装成packet-out消息转发到OpneFlowPlugin； <br>
+（7-3）地址跟踪服务将MAC地址和端口的映射关系写入MD-SAL的DataStore中； <br>
+（7-4）主机跟踪服务更新DataStore中的拓扑数据； <br>
+（8）OpenFlowPlugin监听到DataStore中的流表发生更新； <br>
+（9）OpenFlowPlugin将消息封装为flowmod消息，然后传递给OpenFlowJava； <br>
+（10）OpenFlowJava将消息序列化之后，通过与交换机相连的网络将消息发送出去。</p><div class="md-section-divider"></div><h4 data-anchor-id="928e" id="topology-processing-framework"><strong>Topology Processing Framework</strong></h4><p data-anchor-id="dbd3">该项目在当前版本中，需要安装dlux插件，才可以在网页中进行查看。 <br>
+1、该项目主要用于对网络拓扑的聚合和过滤。因为ODL支持不同的南向协议，不同协议使用不同的拓扑发现方法，所以每个协议只能形成一个对当前拓扑的片面认识，需要一个整合过程。两种作用：</p><p data-anchor-id="4eu3">（1）聚合：将ODL控制器中的DataStore中的拓扑作为输入，通过聚合处理，将结果保存到DataStore中。输入拓扑称为underlay拓扑（物理拓扑），输出拓扑为overlay拓扑（逻辑拓扑）。</p><ul data-anchor-id="rk6c">
+<li>统一（unification）：一个overlay最少有一个underlay。</li>
+<li>对等（equality）：一个overlay最少有两个underlay。</li>
+</ul><p data-anchor-id="eqoq">（2）过滤：负责提供过滤后的拓扑视图，你需要哪就给你提供哪的拓扑。</p></div>
+</body>
+</html>

@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Topology Discovery in Software Defined Networks: Threats, Taxonomy, and State-of-the-Art</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="91z2" id="topology-discovery-in-software-defined-networks-threats-taxonomy-and-state-of-the-art">Topology Discovery in Software Defined Networks: Threats, Taxonomy, and State-of-the-Art</h1><div class="md-section-divider"></div><h4 data-anchor-id="m3i6" id="suleman-khan-abdullah-ganiainuddin-wahid-abdul-wahab-mohsen-guizaniand-muhammad-khurram-khan">Suleman Khan, Abdullah Gani,Ainuddin Wahid Abdul Wahab, Mohsen Guizani,and Muhammad Khurram Khan</h4><div class="md-section-divider"></div><h3 data-anchor-id="4lif" id="ieee-communications-surveys-tutorials-vol-19-no-1-first-quarter-2017">IEEE COMMUNICATIONS SURVEYS &amp; TUTORIALS, VOL. 19, NO. 1, FIRST QUARTER 2017</h3><p data-anchor-id="gzgl"><code>论文</code></p><hr><p data-anchor-id="8l2b">主要通过该篇论文学习SDN中的拓扑发现相关知识。</p><p data-anchor-id="mvuq">（1）控制器发现主机：主机连接到交换机上，交换机会将主机的（MAC地址、IP地址、元数据【交换机ID、端口号、最新的时间戳】）封装进packet_in消息中，发送给控制器。控制器维持一个主机配置表，表中有所有连接到网络中的主机信息。各个控制器中都有相应的主机追踪项目，ODL中为l2switch-hosttracker。 <br>
+（2）控制器发现交换机：没有特殊的协议，也没有必要。控制器初始握手时发现交换机。 <br>
+（3）控制器发现交换机之间的链路：使用LLDP协议（d）。具体操作如下：</p><ul data-anchor-id="dvul">
+<li>控制器先与交换机建立连接；</li>
+<li>控制器发送FEATURE_REQUEST_MESSAGE给交换机，询问交换机状态信息；</li>
+<li>交换机回复FEATURE_REPLY_MESSAGE给控制器，其中包括交换机中活跃的端口号以及对应的IP地址和MAC地址；</li>
+<li>控制器发送packet_out消息（其中封装了LLDP消息）给所有活跃的端口，目的MAC为多播MAC地址。</li>
+<li>（举例）交换机S1接收到LLDP消息，通过端口1转发给S2的端口2。S2将LLDP帧抽取出来添加到packet_in消息中，并将接收端口2和上级交换机S1一同封装在packet_in消息中发送给控制器。</li>
+<li>控制器受到消息之后，建立拓扑，即S1通过S2的端口2和S2连接。【注：要想知道与S2的端口2相连的S1端口，要通过S2将LLDP消息转发到S1的端口1，由S1发送packet_in消息给控制器，才可以知道。】</li>
+</ul><p data-anchor-id="o0je"><strong>总结</strong></p><ul data-anchor-id="g7ax">
+<li><strong>如果想在packet_in消息中多加入一位进行识别，需要修改ODL的OpenFlowPlugin项目和l2switch项目。但首先要读代码。</strong></li>
+<li><strong>需要再详细了解OpenFlow协议中的各种机制。</strong> <a href="http://www.h3c.com/cn/d_201811/1131080_30005_0.htm" target="_blank">学习资料</a></li>
+</ul></div>
+</body>
+</html>
