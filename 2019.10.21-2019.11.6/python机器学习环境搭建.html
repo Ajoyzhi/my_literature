@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>python机器学习环境搭建</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="4sgn" id="python机器学习环境搭建">python机器学习环境搭建</h1><p data-anchor-id="mdcn"><code>实验</code></p><hr><p data-anchor-id="tn4e">1、建议使用的工具：</p><ul data-anchor-id="5vbf">
+<li>基本环境：<a href="https://www.python.org/ftp/python/" target="_blank">python3</a></li>
+<li>包管理工具：<a href="https://www.anaconda.com/distribution/" target="_blank">anaconda</a></li>
+<li>在线程序编辑工具：<a href="https://jupyter.org/" target="_blank">jupyter notebook</a></li>
+</ul><p data-anchor-id="npz3">2、安装环境：</p><ul data-anchor-id="cd55">
+<li>操作系统：ubuntu16.0.4LTS</li>
+<li>python版本：python2.7（默认）/3.5</li>
+</ul><p data-anchor-id="fj3q">3、安装步骤：</p><p data-anchor-id="2864">（1）python安装</p><ul data-anchor-id="qn81">
+<li>查看python 3.5是否安装</li>
+</ul><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="l0kr"><ol class="linenums"><li class="L0"><code><span class="pln">$ whereis python</span></code></li></ol></pre><p data-anchor-id="whr9">如果其中存在“/usr/bin/python3.5”，则说明其中安装了python3.5。</p><ul data-anchor-id="dega">
+<li>如果不存在，使用以下命令安装python3.5。</li>
+</ul><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="jwri"><ol class="linenums"><li class="L0"><code><span class="pln">$ sudo apt</span><span class="pun">-</span><span class="kwd">get</span><span class="pln"> install python3</span><span class="pun">.</span><span class="lit">5</span></code></li></ol></pre><ul data-anchor-id="yzgf">
+<li>查看ubuntu中默认的python版本</li>
+</ul><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="1f0y"><ol class="linenums"><li class="L0"><code><span class="pln">$ python </span><span class="pun">--</span><span class="pln">version  </span><span class="com">//一般默认使用python2.7</span></code></li></ol></pre><ul data-anchor-id="kgx0">
+<li>更改默认python版本</li>
+</ul><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="labg"><ol class="linenums"><li class="L0"><code><span class="pln">$ sudo rm </span><span class="pun">/</span><span class="pln">user</span><span class="pun">/</span><span class="pln">bin</span><span class="pun">/</span><span class="pln">python  </span><span class="com">//删除原有的python连接文件</span></code></li><li class="L1"><code><span class="pln">$ ln </span><span class="pun">-</span><span class="pln">s </span><span class="pun">/</span><span class="pln">usr</span><span class="pun">/</span><span class="pln">bin</span><span class="pun">/</span><span class="pln">python3</span><span class="pun">.</span><span class="lit">5</span><span class="pln"> </span><span class="pun">/</span><span class="pln">usr</span><span class="pun">/</span><span class="pln">bin</span><span class="pun">/</span><span class="pln">python  </span><span class="com">//连接python3.5文件</span></code></li><li class="L2"><code><span class="pln">$ PATH</span><span class="pun">=</span><span class="str">/usr/</span><span class="pln">bin</span><span class="pun">:</span><span class="pln">$PATH  </span><span class="com">//将/usr/bin加入环境变量中</span></code></li><li class="L3"><code><span class="pln">$ python </span><span class="pun">--</span><span class="pln">version  </span><span class="com">//验证默认版本，已更改为python3.5</span></code></li></ol></pre><div class="md-section-divider"></div><h4 data-anchor-id="k0t2" id="注意也可以下载使用更高的python版本但是其它版本不能通过以上命令安装需要自己下载安装包可以参考教程但是不建议这么做网上实操会出现很多问题"><strong>注意：也可以下载使用更高的python版本，但是其它版本不能通过以上命令安装，需要自己下载安装包，可以参考<a href="https://www.linuxidc.com/Linux/2019-07/159277.htm" target="_blank">教程</a>。但是，不建议这么做，网上实操会出现很多问题。</strong></h4><p data-anchor-id="yrk1">（2）<a href="https://docs.anaconda.com/anaconda/install/linux/" target="_blank">安装anaconda</a></p><ul data-anchor-id="ttik">
+<li>在<a href="https://www.anaconda.com/distribution/" target="_blank">官网</a>上下载anaconda，建议下载最新版的【到2019.10.31为python3.7版本】。</li>
+<li>在~/download中，存在一个xxx.sh文件【相当于安装包，Anaconda3-2019.10-Linux-x86_64.sh】。</li>
+<li>校验</li>
+</ul><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="9kgl"><ol class="linenums"><li class="L0"><code><span class="pln">$ sha256sum </span><span class="pun">~</span><span class="str">/download/</span><span class="pln">xxx</span><span class="pun">.</span><span class="pln">sh  </span><span class="com">//校验该安装包是否下载完整，也可以将该安装包放在别的位置，但需要该安装包的绝对路径</span></code></li></ol></pre><ul data-anchor-id="6ufx">
+<li>安装命令</li>
+</ul><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="127m"><ol class="linenums"><li class="L0"><code><span class="pln">$ bash </span><span class="pun">~</span><span class="str">/downloads/</span><span class="pln">xxx</span><span class="pun">.</span><span class="pln">sh  </span><span class="com">//安装</span></code></li></ol></pre><ul data-anchor-id="9tze">
+<li>阅读协议条款，并同意：“In order to continue the installation process, please review the license agreement”，持续按Enter，直到出现“Yes or no”，输入 <strong>“Yes”</strong> 。</li>
+<li>按Enter同意默认的安装位置，建议不要更换安装位置，一般为~/anaconda&lt;2 or 3&gt;。【ctrl-c停止安装；或者指定其它的安装路径。】</li>
+<li>将anaconda路径加入环境变量中：“Do you wish the installer to initialize Anaconda3 by running conda init?”，输入 <strong>“Yes”</strong>。</li>
+<li>安装完成，“Thank you for installing Anaconda&lt;2 or 3&gt;!”。可以使用 <strong>“conda --version”</strong> 验证。</li>
+<li>关闭当前窗口，再打开，发现出现 <strong>（base）</strong>，说明anaconda环境被激活。可以使用 <strong>“conda config --set auto_activate_base False”</strong> 关闭anaconda环境。再启动可以使用 <strong>“conda activate”</strong> /关闭使用 <strong>“conda deactivate”</strong>。</li>
+</ul><p data-anchor-id="bi0n">（3）安装jupyter notebook</p><ul data-anchor-id="rgjb">
+<li>如果anaconda成功安装，那么jupyter notebook也已成功安装。</li>
+<li>激活anaconda环境</li>
+</ul><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="2fpt"><ol class="linenums"><li class="L0"><code><span class="pln">$ conda activate  </span><span class="com">//出现（base）</span></code></li></ol></pre><ul data-anchor-id="djjp">
+<li>打开jupyter notebook</li>
+</ul><div class="md-section-divider"></div><pre class="prettyprint linenums prettyprinted" data-anchor-id="6ibg"><ol class="linenums"><li class="L0"><code><span class="pln">$ jupyter notebook</span></code></li></ol></pre><p data-anchor-id="sa8g">附：删除ubuntu16.0.4LST中不常用的系统软件。参考<a href="https://blog.csdn.net/qq_32600929/article/details/78994410" target="_blank">不常用的软件</a>和<a href="https://blog.csdn.net/weixin_42128364/article/details/81297741" target="_blank">彻底清除步骤</a>。</p><div class="md-section-divider"></div><h4 data-anchor-id="dmcu" id="注意anaconda和jupyter-notebook的使用方法建议参考官网">注意：anaconda和jupyter notebook的使用方法建议参考官网。</h4></div>
+</body>
+</html>

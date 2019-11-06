@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>《华为Anti-DDoS技术漫谈》</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="idvs" id="华为anti-ddos技术漫谈">《华为Anti-DDoS技术漫谈》</h1><p data-anchor-id="ba8t"><code>书籍</code></p><hr><div class="md-section-divider"></div><h3 data-anchor-id="de0c" id="第一章"><strong>第一章</strong></h3><p data-anchor-id="4ulz">华为Anti-DDoS方案：基本上可以想到的检测手段都有。 <br>
+（1）对于 <strong>假源的问题</strong>，通过 <strong>验证源是否存在</strong> 解决：不回应或者发送假消息，回复的主机为真，不回复的主机为僵尸机。 <br>
+（2）云清洗模式：为了避免引流流量占据主要的通信带宽，在各地设置本地的清洗中心。如果攻击流量来自各个地方，则可以由控制中心调配，就近选择清洗中心进行清洗。</p><div class="md-section-divider"></div><h3 data-anchor-id="i91r" id="第二章-dns攻击"><strong>第二章 DNS攻击</strong></h3><p data-anchor-id="8aoa">（1）DNS request flooding：验证源是否存在。可以通过 <strong>TCP查询机制</strong>（将TC=1，使用TCP报文发送DNS请求）、<strong>DNS重传机制</strong>（第一次接收DNS请求不回应，定期会重传）、<strong>DNS别名机制</strong>（返回该IP地址的别名，正常主机会再次询问该别名的IP地址）方法。 <br>
+（2）DNS reply flooding</p><ul data-anchor-id="7vr1">
+<li>验证源是否存在；</li>
+<li>DNS反射攻击：目标主机是否存在DNS请求会话；</li>
+<li>DNS缓存投毒：Attacker发送一个不存在的子域名请求，并抢先发送大量DNS回应报文【DNS缓存服务器只检测原查询包发送IP（缓存服务器IP）、端口和Query ID，所以该报文需要目的IP（缓存服务器IP）、目的端口（缓存服务器发送查询时的端口）、Query ID（这个需要碰运气）】，试图抢先命中Query ID，将假的&lt;域名，IP&gt;存在DNS缓存服务器上。该危害在于该报文也伪造了授权服务器的IP地址，因为缓存服务器认为自己给授权服务器发送DNS请求消息，所以接收到一个各种数据都匹配的数据包，就会认为该源IP为授权服务器的IP地址，实际该IP为Attacker的IP地址，所以以后该缓存服务器对授权服务器的访问都会到一个假的IP地址。—— 验证接收消息的五元组&lt;源IP（会和发消息时的目的IP不同）、目的IP 、源端口、目的端口、协议类型&gt; + Query ID。</li>
+</ul><div class="md-section-divider"></div><h3 data-anchor-id="apf6" id="第三章-http攻击"><strong>第三章 HTTP攻击</strong></h3><p data-anchor-id="ld5y">（1）HTTP GET Flood：僵尸机发送大量请求给服务器，消耗服务器资源。</p><ul data-anchor-id="s7y2">
+<li>302重定向认证：发送一个302的回复报文【该报文用于告知用户需要重定向到新的URL】，正常主机会RST再连接新的URL，僵尸机不会。</li>
+<li>验证码认证：可以基于IP数量的统计。去往某目的IP的HTTP请求高于阈值，启动统计源IP ，发现某源IP的HTTP请求也超过阈值，再启动验证码认证。</li>
+<li>基于特征</li>
+</ul><p data-anchor-id="x1zt">（2）HTTP POST Flood：307重定向【回复307+cookie；再握手，通过cookie验证，再发408请求重发；最后连接】和验证码认证</p><p data-anchor-id="fprm">（3）HTTP慢速连接</p><ul data-anchor-id="maa8">
+<li>slow header：HTTP请求报文&lt;请求行，请求头部，空行，请求数据&gt;组成，其中空行由“\r\n”组成，表示请求头部结束，以后为数据部分。僵尸机不发带有空行的数据包，占用服务器资源。</li>
+<li>slow post：HTTP响应报文&lt;状态行，响应头部，空行，响应数据&gt;组成，其中空行表示响应头部结束，以后为响应数据部分。僵尸机发送一个length【最长为8192bytes】很长的post报文，缓慢发送后续数据，占用服务器资源。</li>
+</ul><div class="md-section-divider"></div><h3 data-anchor-id="lbcp" id="第四章-tcp攻击"><strong>第四章 TCP攻击</strong></h3><p data-anchor-id="yfi4">（1）SYN Flood</p><ul data-anchor-id="4hgv">
+<li>基本源认证：SYN-ACK回复错误的确认号，正常会发送RST；僵尸机不会响应。但是有些设备可能会直接丢弃错误确认号的SYN-ACK报文，或者客户端不响应带错误确认号的SYN-ACK报文，方法不灵。</li>
+<li>高级源认证：SYN-ACK回复争取确认号，在收到ACK之后，防御系统发送RST，再连接加入白名单。</li>
+<li>首包丢弃：为了避免反弹报文数量巨大，所以先丢弃第一次到达的SYN数据包【记录三元组和时间】，根据TCP的重传机制，正常主机会重传SYN【匹配三元组和时间】。可结合以上两中方式使用。对于不断变化源IP和源端口的虚假源攻击，比较有效。</li>
+</ul><p data-anchor-id="cux6">（2）SYN-ACK Flood：防御系统回复SYN，正常主机就回复SYN-ACK；僵尸机不响应。</p><p data-anchor-id="cofq">（3）ACK/FIN/RST Flood：验证会话是否存在。命中会话且序列号正确则通过，否则丢弃。</p><p data-anchor-id="wdjo">（4）TCP耗尽攻击：僵尸机快速释放连接、建立连接以消耗服务器资源【某目标的TCP新建速率超过某阈值，就针对该目标找源IP】/建立连接之后很少发送数据包【特定时间内发送的报文数小于阈值，为异常会话】</p><p data-anchor-id="ctsc">（5）TCP异常报文：6个标志位中部分不能同时为1。 <br>
+<img src="https://s2.ax1x.com/2019/10/26/KBq39g.jpg" alt="KBq39g.jpg"></p><div class="md-section-divider"></div><h3 data-anchor-id="0233" id="第五章-udp攻击"><strong>第五章 UDP攻击</strong></h3><p data-anchor-id="d7tg">（1）NTP放大攻击 <br>
+NTP(Network Time Protocol,网络时间协议)，用于校准计算机中的时钟，其中会存储和自己通信的最后600个客户端的IP地址【Monlist】，而且客户端通过请求是可以获取的。</p><ul data-anchor-id="ekcz">
+<li>特征过滤：UDP数据包；目的端口号固定。</li>
+</ul></div>
+</body>
+</html>
