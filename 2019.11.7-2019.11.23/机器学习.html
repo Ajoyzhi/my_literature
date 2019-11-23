@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>机器学习</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="9c00" id="机器学习">机器学习</h1><p data-anchor-id="lnft"><code>idea</code></p><hr><div class="md-section-divider"></div><h3 data-anchor-id="zlxw" id="基于机器学习的sdn中ddos攻击的检测与防御"><strong>基于机器学习的SDN中DDoS攻击的检测与防御</strong></h3><p data-anchor-id="8per">1、基本步骤 <br>
+（1）信息收集</p><ul data-anchor-id="ca52">
+<li>谁收集信息：只有入口交换机（检测外来攻击）/出口交换机（防止攻击别人）-》<strong>是否需要假定只有一个入口/出口交换机？？</strong></li>
+<li>如何发送信息：设特征抽取的位置在X。在交换机缓存满之前，将头部信息发送到X，由X进行数据预处理和特征抽取。<strong>交换机缓存有多大，数据发送速率为多少时会满？能不能作为判断发送攻击的标志？</strong></li>
+<li>发送频率：涉及抽样的内容。如果数据量比较小，可以全部发送给X；如果数据量大的话，需要抽样。<strong>如何确定数据量的大小？抽样策略如何确定？</strong></li>
+</ul><p data-anchor-id="ea5y">（2）特征抽取</p><ul data-anchor-id="dzlt">
+<li>特征抽取、分类等步骤在哪做：X=控制器/额外的设备，我觉得会在<strong>控制器</strong>中，要通过信息收集过程确保数据是以一个控制器可以接受的速度发送给控制器的（如果太快，就可以直接采取措施）。</li>
+<li>抽取什么样的特征：可以使用类似PCA的方法进行选择【进行数据预处理】，但是首先要解决<strong>线上/线下训练</strong>的问题。<strong>打算使用线上/线下相结合的方式，先线下训练出一个模型，然后线上进行修正。</strong></li>
+<li>线下训练的模式什么时候可以投入使用：测试数据的准确率和误报率决定；线上训练如何解决过拟合的问题：平时训练使用正则化【开始和停止训练的标准】</li>
+</ul><p data-anchor-id="33g3">（3）分类</p><ul data-anchor-id="zq15">
+<li>是对什么进行分类：一段时间内的<strong>数据包的头部信息</strong>进行数据预处理（标准化）、特征抽取（转化为新的数据）。或者抽样来的数据包头部（用一部分数据来代替这一个时间段内的流）-》通过这些特征，判断这个时间段内的流是否正常（判断时，这些数据都在交换机的缓存中；判断完成，下发流规则之后，再处理这些流）</li>
+<li>使用什么算法进行分类：如果使用线上/线下训练的模式，线下需要采用一种监督/非监督的机器学习模式【需要进行LDA/PC】；线上训练只能是非监督的【是选取之前选取的特征，还是要进行新的训练：要进行一个讨论】</li>
+</ul><p data-anchor-id="9rnu">（4）反馈缓解</p><ul data-anchor-id="8qyv">
+<li>最好还是可以根据<strong>攻击的强度</strong>进行相对应的缓解工作，但是机器学习算法只能判断该时间段是否发生攻击，或者说对头部信息进行分类，说明该流为正常/异常，信息量着实有点少。<strong>如何评估攻击强度？数据量的大小？</strong></li>
+</ul><p data-anchor-id="6y63">（5）性能评估</p><ul data-anchor-id="x0j8">
+<li><strong>之前的研究评估的准确度、误报率都是分类器（算法）的性能</strong>，不能算作整个检测缓解系统的评价，需要再单独制定一套评价标准。</li>
+</ul></div>
+</body>
+</html>

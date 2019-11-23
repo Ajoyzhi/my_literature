@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>In-design Resilient SDN Control Plane and Elastic Forwarding Against Aggressive DDoS Attacks</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="e5we" id="in-design-resilient-sdn-control-plane-and-elastic-forwarding-against-aggressive-ddos-attacks">In-design Resilient SDN Control Plane and Elastic Forwarding Against Aggressive DDoS Attacks</h1><p data-anchor-id="k3i8"><code>论文</code></p><hr><p data-anchor-id="en22">论文读了一部分，感觉没有什么需要的东西，而且公式太多，有点难懂，所以就放弃了。只总结有用的部分。</p><p data-anchor-id="t2fe">该论文主要是讲SDN-WAN中的DDoS攻击防御的问题，通过将 <strong>带内管理</strong> 变为 <strong>带外管理</strong>，减少主要链路的压力，并降低攻击的风险和代价。</p><p data-anchor-id="45gb">（1）abstract</p><ul data-anchor-id="89nb">
+<li>带内管理：管理控制信息和数据信息使用统一的物理通道传递。</li>
+<li>带外管理：通过不同的信道传递控制信息和数据信息。</li>
+<li>为了增加网络灵活性、减少网络成本，SDN-WAN一般使用 <strong>带内管理</strong> 。</li>
+</ul><p data-anchor-id="337s">（2）SDN-WAN的结构 <br>
+<img src="https://s2.ax1x.com/2019/11/23/MHy16e.png" alt="MHy16e.png" title=""></p><ul data-anchor-id="4z1t">
+<li>WAN 控制器：掌握整个网络的信息情况；</li>
+<li>转发平面的交换机</li>
+<li>接入交换机：和终端节点连接的交换机，相当于交换机中的最底层；</li>
+<li>终端节点：可能是服务器，或者是另外一个网络。</li>
+</ul><p data-anchor-id="kqy1">（3）拓扑数据库</p><ul data-anchor-id="906t">
+<li>实验使用的数据库：<a href="https://research.cs.washington.edu/networking/rocketfuel/" target="_blank">https://research.cs.washington.edu/networking/rocketfuel/</a></li>
+</ul></div>
+</body>
+</html>
