@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Witnessing Distributed Denial-of-Service Traffic from an Attacker's Network</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="s9m8" id="witnessing-distributed-denial-of-service-traffic-from-an-attackers-network">Witnessing Distributed Denial-of-Service Traffic from an Attacker's Network</h1><div class="md-section-divider"></div><h3 data-anchor-id="jl34" id="sin-seok-seoyoung-j-wonjames-won-ki-hong">Sin-seok Seo，Young J. Won，James Won-Ki Hong，</h3><p data-anchor-id="ty3u"><code>论文</code></p><hr><p data-anchor-id="dx2l">通过对两次攻击流量的分析，描述攻击流量的特征。</p><div class="md-section-divider"></div><h4 data-anchor-id="tcpy" id="数据来源"><strong>数据来源</strong></h4><p data-anchor-id="9xju">1、7.7DDoS攻击（2009年7月5日凌晨2点-2009年7月10日18点） <br>
+（1）攻击阶段</p><ul data-anchor-id="vte1">
+<li>7-5 02：00 - 7-5 14：00：攻击8个美国网站；</li>
+<li>7-5 22：00 - 7-6 18：00：攻击21个每过网站（政府、军队、经济等网站）；</li>
+<li>7-7 18：00 - 7-8 18：00：攻击13个美国网站和13个南韩网站（政治、军队、经济和流行的网站）；</li>
+<li>7-8 18：00 - 7-9 18：00：攻击南韩14个网站（包括网络安全公司，主要是为了防止病毒库的更新）；</li>
+<li>7-9 18：00 - 7-10 18：00：攻击7个南韩网站。</li>
+</ul><p data-anchor-id="0zuo">（2）数据特征</p><ul data-anchor-id="97sk">
+<li>不确定的攻击目标：被攻击的网站不单一；</li>
+<li>对大量网站同时攻击</li>
+<li>自动攻击：僵尸机被C&amp;C（Command &amp; Control）控制，所以一般找到C&amp;C服务器的IP地址，就可以对DDoS攻击进行防御；</li>
+<li>大规模的僵尸主机：不精确地估计，这次攻击中使用的僵尸主机大概有78000-200000，所以不存在IP地址欺骗；</li>
+<li>低速率攻击：大概每个主机值产生54.2kbps的攻击流量，以致于在攻击开始并没有检测出来；</li>
+<li>多种攻击类型：包括TCP syn泛洪、UDP 80泛洪、ICMP泛洪、HTTP Get/POST泛洪；</li>
+<li>僵尸机的妥协：攻击者将攻击日志删除，在僵尸机上没有存在什么痕迹。</li>
+</ul><p data-anchor-id="nbuc">2、3.3DDoS攻击（2011年3月3日17点开始）</p><ul data-anchor-id="pb7o">
+<li>3-3 17：00 ：攻击29个南韩网站；</li>
+<li>3-4 10：0 ：攻击40个南韩网站。</li>
+</ul><div class="md-section-divider"></div><h4 data-anchor-id="mnep" id="流量分析"><strong>流量分析</strong></h4><p data-anchor-id="qdty">1、流量分布 <br>
+<img src="https://s2.ax1x.com/2019/12/07/QtC4gS.png" alt="QtC4gS.png"></p><ul data-anchor-id="admm">
+<li>所有子网IP：属于校园的子网IP地址；</li>
+<li>可疑的子网IP地址：至少有一条链路直接连接被攻击的主机/服务器；</li>
+</ul><p data-anchor-id="8bs5">2、流量分析 <br>
+（1）流量总特征 <br>
+<img src="https://s2.ax1x.com/2019/12/07/QtCj3T.png" alt="QtCj3T.png"></p><ul data-anchor-id="fj2k">
+<li>子网IP的所有流量并没有什么大差异。</li>
+<li>但是可疑子网IP地址在7/8的数据包数量和流数量明显大于其它天数，而且流量较小，说明僵尸机发送大量无意义的数据给目标网站。</li>
+</ul><p data-anchor-id="usik">（2）协议比率 <br>
+<img src="https://s2.ax1x.com/2019/12/07/QtiMyF.png" alt="QtiMyF.png"></p><ul data-anchor-id="4mwy">
+<li>确实看不出什么特征。</li>
+</ul><p data-anchor-id="h7wo"><strong>基础分析在攻击端并不适用，不能找到明显的特征。</strong></p><p data-anchor-id="sotf">（3）IP互动数量 <br>
+<img src="https://s2.ax1x.com/2019/12/07/QtFBcT.png" alt="QtFBcT.png"> <br>
+流的平均数据包大于64bytes，则为蓝色；否则为红色。</p><ul data-anchor-id="vg8o">
+<li>有攻击情况下（07/08，07/09）平均数据包的大小明显小于64bytes，说明攻击过程中发送的数据包大小比较小。</li>
+<li>而没有攻击（03/31、08/12）的情况下，数据包明显大于64bytes。</li>
+</ul><p data-anchor-id="axbd"><img src="https://s2.ax1x.com/2019/12/07/QtZ7tJ.png" alt="QtZ7tJ.png"></p><ul data-anchor-id="vf5a">
+<li>攻击（03/04）和不攻击（03/14）的平均数据包大小大小没有明显差异，说明<strong>3.3攻击中，本校园内的僵尸主机不多。</strong></li>
+</ul><p data-anchor-id="2acc">（4）流间隔 <br>
+<img src="https://s2.ax1x.com/2019/12/07/Qtekct.png" alt="Qtekct.png"></p><ul data-anchor-id="rkiz">
+<li>正常流量流间隔在[0.001，0.01]之间的比较少，而攻击流量有10%在这个区间，说明攻击流量是在短时间内发送了大量的数据包给目标主机；</li>
+<li>攻击流量的流间隔主要集中在10s左右。</li>
+</ul><p data-anchor-id="h800">（5）每个可疑僵尸主机的平均数据包大小 <br>
+<img src="https://s2.ax1x.com/2019/12/07/QteF1I.png" alt="QteF1I.png" title=""></p><ul data-anchor-id="92rg">
+<li>攻击流量的平均数据包大小明显小于正常流量，主要集中在50bytes左右。</li>
+</ul><div class="md-section-divider"></div><h3 data-anchor-id="ghae" id="总结"><strong>总结</strong></h3><p data-anchor-id="5rpq">可以抓取 <strong>数据包大小</strong>、<strong>流间隔</strong>这些特征，来分析攻击流量。</p></div>
+</body>
+</html>

@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Towards Generating Real-life Datasets for Network Intrusion Detection</title>
+</head>
+<body>
+<div style="visibility: hidden; overflow: hidden; position: absolute; top: 0px; height: 1px; width: auto; padding: 0px; border: 0px; margin: 0px; text-align: left; text-indent: 0px; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal;"><div id="MathJax_SVG_Hidden"></div><svg><defs id="MathJax_SVG_glyphs"><path id="MJMATHI-3B1" stroke-width="1" d="M34 156Q34 270 120 356T309 442Q379 442 421 402T478 304Q484 275 485 237V208Q534 282 560 374Q564 388 566 390T582 393Q603 393 603 385Q603 376 594 346T558 261T497 161L486 147L487 123Q489 67 495 47T514 26Q528 28 540 37T557 60Q559 67 562 68T577 70Q597 70 597 62Q597 56 591 43Q579 19 556 5T512 -10H505Q438 -10 414 62L411 69L400 61Q390 53 370 41T325 18T267 -2T203 -11Q124 -11 79 39T34 156ZM208 26Q257 26 306 47T379 90L403 112Q401 255 396 290Q382 405 304 405Q235 405 183 332Q156 292 139 224T121 120Q121 71 146 49T208 26Z"></path></defs></svg></div><div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="a5ip" id="towards-generating-real-life-datasets-for-network-intrusion-detection">Towards Generating Real-life Datasets for Network Intrusion Detection</h1><div class="md-section-divider"></div><h3 data-anchor-id="efgx" id="title"> </h3><p data-anchor-id="3bog"><code>论文</code></p><hr><p data-anchor-id="m05n">面向网络入侵检测生成真实生活的数据集，分析之前数据集的弊端，并通过 <strong>捕捉流量、特征抽取、数据预处理和贴标签</strong> 三个过程，生成新的数据集。</p><div class="md-section-divider"></div><h4 data-anchor-id="bv9z" id="存在的数据库"><strong>存在的数据库</strong></h4><p data-anchor-id="7no4"><img src="https://s2.ax1x.com/2019/12/24/l9R5o6.png" alt="l9R5o6.png"></p><p data-anchor-id="rjo3">1、合成数据集 <br>
+2、标准数据库：大型模拟网络下生成的标准数据库 <br>
+（1）KDDcup99数据库</p><ul data-anchor-id="enob">
+<li>由DARPA98 IDS评估程序捕捉；</li>
+<li><img src="https://s2.ax1x.com/2019/12/24/l9RoFK.png" alt="l9RoFK.png" title=""></li>
+</ul><p data-anchor-id="9q5c">（2）NSSL-KDD数据集</p><ul data-anchor-id="n2k8">
+<li>删除了KDD99中的冗余数据，使训练结果不会偏向频率高的项；删除KDD99中的重复数据；训练与测试记录的数量设置合理。</li>
+<li><img src="https://s2.ax1x.com/2019/12/24/l9Rhe1.png" alt="l9Rhe1.png" title=""></li>
+</ul><p data-anchor-id="v4ek">（3）DARPA 2000数据集</p><ul data-anchor-id="zdw7">
+<li>用于检测包含多步的复杂攻击；</li>
+<li>模拟2个攻击场景：LLDOS1.0【探测-攻破系统的脆弱位置-安装DDoS攻击软件-发动DDoS攻击】；LLDOS2.0【更隐秘，更难探测】</li>
+</ul><p data-anchor-id="vby5">（4）DEFCON数据库</p><ul data-anchor-id="22dp">
+<li>于CTF【黑客竞赛】中收集的流量，所以只存在攻击流量，没有正常流量。</li>
+</ul><p data-anchor-id="4sw6">（5）CAIDA数据库</p><ul data-anchor-id="vn4v">
+<li>收集内容为消耗网络资源的DDoS攻击流量，所以流量中只有攻击流量；</li>
+<li>骨干网络匿名，并且没有有效载荷；</li>
+<li>流量形式为pcap【使用tcpdump收集】。</li>
+</ul><p data-anchor-id="mn7d">（6）LBNL数据库</p><ul data-anchor-id="zqfy">
+<li>都是头部，没有有效载荷，存在匿名；</li>
+<li>包括LBNL背景流量【使用tcpmkpub工具匿名】和LBNL攻击流量。 <br>
+<img src="https://s2.ax1x.com/2019/12/24/l9R4dx.png" alt="l9R4dx.png" title=""></li>
+</ul><p data-anchor-id="7al9">（7）终端数据库</p><ul data-anchor-id="j0d5">
+<li><p>背景流量 <br>
+<img src="https://s2.ax1x.com/2019/12/24/l9fNbn.png" alt="l9fNbn.png" title=""></p></li>
+<li><p>攻击流量 <br>
+<img src="https://s2.ax1x.com/2019/12/24/l9RWLR.png" alt="l9RWLR.png" title=""></p></li>
+</ul><p data-anchor-id="y3zi">3、真实流量 <br>
+（1）UNIBS数据库</p><ul data-anchor-id="g8jn">
+<li>从意大利的Brescia大学的边缘路由器上收集的</li>
+</ul><p data-anchor-id="7kl1">（2）ISCX-UNB数据库</p><ul data-anchor-id="ao1t">
+<li>流量收集包括2个文件：<span class="MathJax_Preview"></span><span class="MathJax_SVG" id="MathJax-Element-1-Frame" role="textbox" aria-readonly="true" style="font-size: 100%; display: inline-block;"><svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 -463.9033013280564 640.5 496.80660265611283" style="width: 1.444ex; height: 1.111ex; vertical-align: -0.222ex; margin: 1px 0px;"><g stroke="black" fill="black" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#MJMATHI-3B1"></use></g></svg></span><script type="math/tex" id="MathJax-Element-1">\alpha</script>文件【特定攻击的信息组织出来的文件】和$\$文件【过滤流量路径的文件】；</li>
+<li>再读取这些文件，其中包含攻击信息。</li>
+</ul><p data-anchor-id="j7wm">（3）KU数据集</p><ul data-anchor-id="1iy0">
+<li>从蜜罐中收集的数据，有24个特征，其中14个位显著特征，10个用于调研网络事件。</li>
+</ul><p data-anchor-id="rx46">4、总结</p><ul data-anchor-id="j6n7">
+<li>大部分数据集没有准确地贴标签，包括KDD99、UNIBS、终端、LBNL数据库；</li>
+<li>正常/攻击流量的比例在不同数据库中不同；</li>
+<li>部分数据库已经过时了；</li>
+<li>由于隐私问题，大部分数据库在匿名问题；</li>
+<li>只有生数据，没有流量特征。</li>
+</ul><div class="md-section-divider"></div><h4 data-anchor-id="0q4h" id="真实数据库生成"><strong>真实数据库生成</strong></h4><p data-anchor-id="q9fn">1、测试平台网络结构 <br>
+<img src="https://s2.ax1x.com/2019/12/24/l9RbSe.png" alt="l9RbSe.png" title=""> <br>
+2、网络流量生成 <br>
+（1）网络流量配置 <br>
+<img src="https://s2.ax1x.com/2019/12/24/l9RTJO.png" alt="l9RTJO.png" title=""> <br>
+（2）攻击流量生成：从网络中的3个不同区域收集 <br>
+<img src="https://s2.ax1x.com/2019/12/24/l9R7WD.png" alt="l9R7WD.png" title=""></p><ul data-anchor-id="5h6s">
+<li>1-16：使用工具生成的攻击流量；</li>
+<li>17-22：联合扫描数据库；</li>
+<li>23-28：DDoS攻击数据库。</li>
+</ul><p data-anchor-id="rfjo">3、攻击场景 <br>
+（1）DOS：targa工具 <br>
+（2）探针：使用nmap进行探测 <br>
+（3）联合扫描：使用rnmap <br>
+（4）获取root用户权限：使用暴力尝试的方法ssh <br>
+（5）DDoS：使用agent-handler网络 <br>
+（6）DDoS：使用IRC僵尸网络</p><p data-anchor-id="kyff">4、捕捉流量 <br>
+（1）Libpcap：捕捉网络中的所有流量，并存储。</p><ul data-anchor-id="u0tt">
+<li>捕捉过程：监控网络所有接口，将数据包复制到内核缓存中，并直接过滤掉不想要的流量。</li>
+<li>在固定的时间注入攻击流量。</li>
+</ul><p data-anchor-id="kg09">（2）Gulp：捕捉数据包级的流量</p><ul data-anchor-id="a0ey">
+<li>从网卡缓存中直接获取数据，并且不丢弃任何数据。</li>
+</ul><p data-anchor-id="1c1s">（3）NetFlow：捕捉流级的流量</p><ul data-anchor-id="zjb5">
+<li>捕捉数据：源IP、目的IP、源端口、目的端口、协议、TOS <br>
+<img src="https://s2.ax1x.com/2019/12/24/l9RqQH.png" alt="l9RqQH.png" title=""></li>
+<li>工具：NFDUMP、NFSEN</li>
+</ul><p data-anchor-id="zp4k">5、特征抽取</p><ul data-anchor-id="hc42">
+<li>使用wireshark和Java路由过滤不想要的、和捕获数据包无关的数据包</li>
+<li>数据包级特征 <br>
+<img src="https://s2.ax1x.com/2019/12/24/l9RjeI.png" alt="l9RjeI.png" title=""></li>
+<li>流级特征的参数定义：基本特征；基于内容的特征；基于时间的特征；基于连接的特征 <br>
+<img src="https://s2.ax1x.com/2019/12/24/l9Rvwt.png" alt="l9Rvwt.png" title=""></li>
+<li>特征抽取算法 <br>
+<img src="https://s2.ax1x.com/2019/12/24/l9RxTP.png" alt="l9RxTP.png" title=""></li>
+</ul><p data-anchor-id="ht90">6、数据预处理和贴标签</p><ul data-anchor-id="6sp3">
+<li>贴标签的算法 <br>
+<img src="https://s2.ax1x.com/2019/12/24/l9faEq.png" alt="l9faEq.png" title=""></li>
+<li>TUIDS数据库的协议分布 <br>
+<img src="https://s2.ax1x.com/2019/12/24/l9WpY8.png" alt="l9WpY8.png" title=""></li>
+<li>TUIDS数据库的流量分布 <br>
+<img src="https://s2.ax1x.com/2019/12/24/l9WPSg.png" alt="l9WPSg.png" title=""></li>
+</ul><p data-anchor-id="xlst">7、和其他数据库进行对比 <br>
+<img src="https://s2.ax1x.com/2019/12/24/l9WilQ.png" alt="l9WilQ.png" title=""></p><div class="md-section-divider"></div><h3 data-anchor-id="o8xv" id="总结"><strong>总结</strong></h3><p data-anchor-id="4kgs">以上那些内容都不重要，重要的是各个数据集。 <br>
+KDDcup99：<a href="https://archive.ics.uci.edu/ml/index.php" target="_blank">https://archive.ics.uci.edu/ml/index.php</a> <br>
+NSL-KDD：www.iscx.ca/ <br>
+DARPA：<a href="http://www.ll.mit.edu/r-d/datasets" target="_blank">http://www.ll.mit.edu/r-d/datasets</a> <br>
+CAIDA：<a href="http://www.caida.org/data/" target="_blank">http://www.caida.org/data/</a> <br>
+LBNL：<a href="http://www.icir.org/enterprise-tracing/" target="_blank">http://www.icir.org/enterprise-tracing/</a> <br>
+TUIDS：<a href="http://agnigarh.tezu.ernet.in/~dkb/resources.html" target="_blank">http://agnigarh.tezu.ernet.in/~dkb/resources.html</a></p></div>
+</body>
+</html>

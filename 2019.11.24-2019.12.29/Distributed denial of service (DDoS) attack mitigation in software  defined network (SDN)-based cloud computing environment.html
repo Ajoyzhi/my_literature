@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Distributed denial of service (DDoS) attack mitigation in software  defined network (SDN)-based cloud computing environment</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="r0ba" id="distributed-denial-of-service-ddos-attack-mitigation-in-software-defined-network-sdn-based-cloud-computing-environment">Distributed denial of&nbsp;service (DDoS) attack mitigation in&nbsp;software  defined network (SDN)-based cloud computing environment</h1><div class="md-section-divider"></div><h3 data-anchor-id="octb" id="kriti-bhushan1-bbgupta1">Kriti&nbsp;Bhushan1  B.B.Gupta1</h3><div class="md-section-divider"></div><h4 data-anchor-id="x0xs" id="journal-of-ambient-intelligence-and-humanized-computing-2019-1019851997">Journal of Ambient Intelligence and Humanized Computing (2019) 10:1985–1997</h4><p data-anchor-id="q0g6"><code>论文</code></p><hr><p data-anchor-id="4q4d">文章写得不怎么样，基础知识说了一大堆，提出的想法上很多细节都没有解释清楚，而且该想法已经有人提出，不算是创新。而且和云计算没有什么大关系。</p><p data-anchor-id="s8ri">1、基本想法</p><ul data-anchor-id="gbpg">
+<li>SDN受到流表耗尽攻击主要是因为流表容量小【流表使用TCAM器件，每个流表大概只能放1500条流规则】。</li>
+<li>所以，在交换机受到DDoS攻击时，将被攻击的交换机的流规则安装到别的空闲交换机上，实现流表的共享。</li>
+<li>方法：将被攻击的交换机需要安装的流规则重定向到新的交换机中；使用率低的流规则可能是攻击流规则，所以将使用率比较低的流规则清除掉。</li>
+<li>假设：所有交换机不会同时被攻击；<strong>流表存储有20%没有被攻击，在使用中，而80%为空闲，可以用于分享流规则。</strong></li>
+<li>目的：为攻击检测和攻击缓解争取时间，在交换机受到攻击和完成缓解工作之间保证合法用户的访问。</li>
+</ul><p data-anchor-id="lnt9">2、流程 <br>
+<img src="https://s2.ax1x.com/2019/12/02/Qn4nLF.png" alt="Qn4nLF.png" title=""></p><ul data-anchor-id="25h7">
+<li>流表状态：记录所有交换机的流表状态，包括流表中流条目的数量。</li>
+<li>黑名单：攻击者的源IP。</li>
+<li>分担交换机的条件：和被攻击交换机的距离短；新交换机流表的消耗状态；新交换机是否通向目的主机。</li>
+</ul><p data-anchor-id="sbsv">3、性能</p><ul data-anchor-id="sqvl">
+<li>检测使用和不使用算法的坚持时间(holding time)：不使用算法是DDoS攻击填满一个交换机的时间；使用算法是DDoS攻击填满所有交换机的时间。 <br>
+<img src="https://s2.ax1x.com/2019/12/02/QnIh2q.png" alt="QnIh2q.png" title=""> <br>
+<img src="https://s2.ax1x.com/2019/12/02/QnI4x0.png" alt="QnI4x0.png" title=""></li>
+<li>检测使用和不使用算法对于交换机和控制器之间的通信消息数量的影响：使用算法，即使用了通配规则将流规则重定向到其它交换机，减少了交换机和控制器之间的交互；不使用算法，即控制器要对所有的新流进行处理。 <br>
+<img src="https://s2.ax1x.com/2019/12/02/QnI25j.png" alt="QnI25j.png" title=""></li>
+</ul><p data-anchor-id="mjof">4、问题（Ajoy）</p><ul data-anchor-id="pu8j">
+<li>流表状态中详细包括哪些项没有明确说明，通过论文推测，至少包括：每张流表中流表项的数量、每个流表项的使用频率等；【应该包括这些项的计算过程】</li>
+<li>流的重定向规则是谁下发的？-》按照以上流程理解，应该是由应用层进行计算、选择，找到可以重定向的新交换机，然后由控制器下发流表，将重定向的规则安装到被攻击的交换机上，所以应用层的这个应用应该可以访问控制器的全局拓扑；</li>
+<li>如何重定向？按照之前论文的学习，应该是将流的入端口信息保存在TOS这种不常用的字段中，然后将action改为转发，出口为被攻击交换机与新交换机连接的端口；</li>
+<li>即使使用这种算法，被攻击交换机处理的流规则一点没有减少，需要它转发的，它都重定向到了新交换机；需要它丢弃的，就直接丢弃就好了；需要它转发给控制器的，它还是重定向到新交换机。所以被攻击交换机处理的流一点也不少。所以以上<strong>假设2</strong>可以保证交换机即使在受到攻击的情况下也有余力处理过载的流，以达到重定向的目的。</li>
+</ul></div>
+</body>
+</html>

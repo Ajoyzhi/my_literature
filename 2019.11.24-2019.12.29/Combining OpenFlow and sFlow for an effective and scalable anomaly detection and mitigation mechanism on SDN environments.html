@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Combining OpenFlow and sFlow for an effective and scalable anomaly detection and mitigation mechanism on SDN environments</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="o40c" id="combining-openflow-and-sflow-for-an-effective-and-scalable-anomaly-detection-and-mitigation-mechanism-on-sdn-environments">Combining OpenFlow and sFlow for an effective and scalable anomaly detection and mitigation mechanism on SDN environments</h1><div class="md-section-divider"></div><h3 data-anchor-id="yrim" id="computer-networks-april-2014">Computer Networks April 2014</h3><div class="md-section-divider"></div><h4 data-anchor-id="qrwi" id="k-giotis-c-argyropoulos-g-androulidakis-d-kalogeras-v-maglaris">K. Giotis, C. Argyropoulos, G. Androulidakis, D. Kalogeras, V. Maglaris</h4><p data-anchor-id="t4ii"><code>论文</code></p><hr><p data-anchor-id="ageb">没有什么正经干货，属于“信息收集-信息分析-攻击检测-缓解策略”这种套路，但是里面具体的细节过于简单，觉得没有太大的帮助，就没有读实验部分。</p><div class="md-section-divider"></div><h4 data-anchor-id="suoa" id="信息收集"><strong>信息收集</strong></h4><p data-anchor-id="96m9">1、OF信息收集：主要只在流表中的counter字段。</p><ul data-anchor-id="oic9">
+<li><strong>基于流的特征</strong> 进行统计，因为counter字段是对流规则匹配数量的总计数，而流规则具有 <strong>聚合</strong> 特性，所以它的统计比较粗糙。</li>
+<li>控制器通过 <em>flow_stats request</em> 请求该统计信息。</li>
+</ul><p data-anchor-id="6w4t">2、sFlow信息收集：一种流量监控软件</p><ul data-anchor-id="85uu">
+<li>针对数据包进行抽样，可以设置抽样比例，<strong>在相应环境中做做实验，使用一下这个工具。</strong></li>
+</ul><div class="md-section-divider"></div><h4 data-anchor-id="9biz" id="信息分析"><strong>信息分析</strong></h4><p data-anchor-id="rpbs">使用 <strong>基于熵</strong> 的信息分析方法，也使用于别的方法，包括机器学习、统计方法等。</p><ul data-anchor-id="9vpw">
+<li>DDoS攻击：目的IP和目的端口的熵变小；</li>
+<li>蠕虫攻击：源IP和源端口的熵变小；</li>
+<li>端口扫描：源IP和目的IP的熵变小。</li>
+</ul><p data-anchor-id="t7yv"><strong>设置的规则过于简单，容易产生误报率高的问题，而且对于我的工作参考价值不大。</strong></p><ul data-anchor-id="5urz">
+<li>为了解决误报的问题，增加 <strong>白名单机制</strong>。但是白名单的获取没有详细说明，主要来源自动学习和人工配置两方面。</li>
+</ul><div class="md-section-divider"></div><h4 data-anchor-id="m6n4" id="攻击检测"><strong>攻击检测</strong></h4><ul data-anchor-id="8kjk">
+<li>正常的实验数据为校园流量，攻击的实验数据为Scapy产生。</li>
+<li>攻击流量的分配均按照以上攻击的典型特征进行，<strong>感觉具有偶然性</strong>。</li>
+</ul><div class="md-section-divider"></div><h4 data-anchor-id="j642" id="缓解策略"><strong>缓解策略</strong></h4><ul data-anchor-id="s49b">
+<li>转发正常流量，丢弃异常流量。</li>
+<li>将异常流量的流规则设置较高的优先级。</li>
+</ul><div class="md-section-divider"></div><h3 data-anchor-id="derg" id="总结"><strong>总结</strong></h3><p data-anchor-id="oqcv">sFlow作为信息收集工具，可以学习使用，看能不能满足需要。 <br>
+Scapy作为流量产生工具，可以学习使用。</p></div>
+</body>
+</html>

@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>DevoFlow: Scaling Flow Management for High-Performance Networks</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="6lcv" id="devoflow-scaling-flow-management-for-high-performance-networks">DevoFlow: Scaling Flow Management for High-Performance Networks</h1><div class="md-section-divider"></div><h3 data-anchor-id="kiv6" id="andrew-r-curtis-jeffrey-c-mogul-jean-tourrilhes-praveen-yalagandula">Andrew R. Curtis Jeffrey C. Mogul, Jean Tourrilhes, Praveen Yalagandula</h3><div class="md-section-divider"></div><h4 data-anchor-id="t4a7" id="sigcomm11-august-1519-2011">SIGCOMM’11, August 15–19, 2011</h4><p data-anchor-id="pqh1"><code>论文</code></p><hr><p data-anchor-id="ptpq">本文解决基于OpenFlow的SDN在高性能网络中的性能不足的问题。</p><div class="md-section-divider"></div><h4 data-anchor-id="uffa" id="introduction"><strong>Introduction</strong></h4><p data-anchor-id="xe3p">（1）问题提出：OpenFlow主要用于学校和广域网，高性能网络是否能承受？ <br>
+（2）观点：OpenFlow当前的设计 <strong>不能满足</strong> 高性能网络的需求。 <br>
+（3）问题所在：集中控制和全局试图的关系紧密，所以控制器需要从交换机处接收大量的流进行处理。</p><ul data-anchor-id="ef4l">
+<li>交换机和控制器的通信效率低：(实验数据)数据平面和控制平面之间的通信带宽比数据平面转发数据占用的带宽小4个数量级；<strong>基于pull的信息收集方法使控制器负担过大</strong></li>
+<li>控制器会有很大的处理负担。<strong>控制器需要实现流的可视化，但是处理所有的流福大太大</strong></li>
+</ul><p data-anchor-id="siu5">（4）解决思路：</p><ul data-anchor-id="vjoq">
+<li>抽取关键流构建拓扑：关键流 = “大象流”；</li>
+<li>可以使交换机具有一定的智能。</li>
+</ul><div class="md-section-divider"></div><h4 data-anchor-id="qu1x" id="benifits-of-central-control-集中控制的优势"><strong>Benifits of Central Control</strong> (集中控制的优势)</h4><p data-anchor-id="8856">（1）避免交换机-交换机的配置信息流动：提供全局一致的策略。 <br>
+高性能网络中的问题：不是所有的流都要流入控制器。以下为“老鼠流”的分类：</p><ul data-anchor-id="cni2">
+<li>安全敏感的流：处理安全问题的流，例如通过预安装的流规则流入控制器的流；</li>
+<li>重要的流：保证QoS的流，可以通过匹配特殊的头部信息进行识别；</li>
+<li>普通的流：应该尽最大努力交付的流。</li>
+</ul><p data-anchor-id="anwa">（2）近乎最优化的流量管理 <br>
+高性能网络中的问题：<strong>负载均衡</strong> 和 <strong>路由代价最小化</strong> </p><ul data-anchor-id="2x3b">
+<li>负载均衡：控制器应该识别“大象流”并进行处理，而非接收处理所有的流；</li>
+<li>路由代价最小化：普通SDN中通过关闭空闲的交换机或者路由器以使路由代价最小化的方式在高性能网络中不适用。</li>
+<li>在高性能网络中的优化：控制器需要对链路使用率进行分析，并且保证一部分流的可视化。</li>
+</ul><p data-anchor-id="bzmr">（3）交换机的功能尽可能简单。</p><div class="md-section-divider"></div><h4 data-anchor-id="3jpd" id="openflow-overheadsopenflow的负载情况"><strong>OpenFlow Overheads</strong>(OpenFlow的负载情况)</h4><p data-anchor-id="ssax">（1）固有负载：交换机和控制器通信时消耗的带宽和其它通信代价。 <br>
+互联网中的每个流大概有20个数据包，而数据中心每个流大概有1KB的数据量。 <br>
+（2）实现过程的负载：在一般交换机上实现OpenFlow功能时付出的代价。</p><ul data-anchor-id="t9yb">
+<li>使用ASCI实现OpenFlow时，交换机收到为匹配的消息，发送给控制器的过程【流设置】；</li>
+<li>信息收集：使用基于pull的方法收集【控制器向交换机询问某流的统计情况】；</li>
+<li>以上两种消息的资源竞争【流设置和信息收集对资源的使用此消彼长】；</li>
+<li>交换机内存小，可以存储的流规则少；</li>
+<li>控制器问题：单个控制器的处理能力不足，多个控制器支持的功能不多。</li>
+</ul><p data-anchor-id="snos">（3）硬件载荷。</p><div class="md-section-divider"></div><h4 data-anchor-id="mtxp" id="devoflow"><strong>DevoFlow</strong></h4><p data-anchor-id="1hvd">（1）两个机制</p><ul data-anchor-id="d0a5">
+<li>规则克隆(rule cloning)：用wildcard处理细小流的到达，进行统一统计。 <br>
+在 <strong>action</strong> 中加入flag <strong>CLONE</strong>。如果CLONE = NONE，则将流进行正常处理，如果CLONE = clones，则生成一条匹配域为该流、其它内容为其匹配的规则内容的新规则。</li>
+<li>本地action(local action)：将流分为“重量级”（必须要发给控制器的）和“轻量级”（可以使用本地交换机进行处理的），所以要在本地交换机维持一个交换机处理动作的库。</li>
+</ul><p data-anchor-id="7log">（2）使用local action实现的两个功能</p><ul data-anchor-id="ad9n">
+<li>多路径支持：OpenFlow中可以对相同的流进行不同路径的选择，该功能可以通过local action实现。在CLONE中多设置几个值。功能类似与ECMP，但是ECMP要求路径均匀且随机地选择，而且各路径的负载均衡，但是DevoFlow回选择不经常走的路径(oblivious routing)；</li>
+<li>快速重路由：如果链路失效可以立即更换路径，因为不用向控制器通信，可以由交换机自己决定。</li>
+</ul><p data-anchor-id="7xy0">（3）有效的数据统计：提供3种方法</p><ul data-anchor-id="a1rg">
+<li>抽样(sampling)：只发送数据头部信息给控制器，其它部分在交换机上存储。通过sFlow实现。</li>
+<li>Trigger and report：当某计数指标超过门限值时，将该流的统计信息发送给控制器。计数指标包括：数据包(packets)、字节(bytes)和流间隔(flow duration)。选取流间隔。</li>
+<li>近似计数：选取字节数top-k的“老鼠流”进行统计。使用streaming算法实现。</li>
+</ul><p data-anchor-id="30ye">（4）实现DevoFlow的灵活性：在软件上实现，但是机制都可以在硬件上很容易地实现。</p><ul data-anchor-id="ccjd">
+<li>规则克隆：在数据平面直接插入精确匹配的流规则。</li>
+<li>多路径支持：可以使用克隆流规则或者使用虚拟端口。这两种实现都需要维持这样一个表格【路径规则、路径权重、随机数生成器】。</li>
+<li>trigger：需要实现计数和比较。计数一般交换机都存在，比较可能要用到交换机的CPU进行。</li>
+<li>近似计数：实现代价最大的一项。对数据包头部进行哈希计算，散列值间接地指向一组计数器，然后对其中一些计数器进行递增。在ASCI芯片中有实现该功能的组件块，所以需要使用交换机的CPU进行这一项。</li>
+</ul><p data-anchor-id="gyrf">（5）使用DevoFlow</p><ul data-anchor-id="4ah6">
+<li>流进入交换机，使用交换机的 <strong>多路径通配符匹配规则</strong>，避免流直接通过table-miss发送给控制器；</li>
+<li>当流的字节数达到X字节【设“大象流”为字节数超过X的流，X=1-10MB】，进行“大象流”检测。可以使用<strong>trigger</strong>、<strong>sampling</strong>、<strong>近似计数</strong>三种方式进行统计；</li>
+<li>如果确定是“大象流”，则将报告发送给控制器；</li>
+<li>控制器选择最不拥堵的路径，使用路径选择算法，参考[16]。输入：网络拓扑、链路使用率、流发送速度、终端节点；输出：可以走“大象流”的所有路径。</li>
+<li>通过下发规则，将该路径分配给“大象流”。</li>
+</ul><div class="md-section-divider"></div><h4 data-anchor-id="au4j" id="evaluation"><strong>Evaluation</strong></h4><p data-anchor-id="ygop">（1）拓扑</p><ul data-anchor-id="e0yk">
+<li>Clos[15]：核心层8个交换机、汇聚层80个交换机、接入层80个交换机、每台交换机上连接20个服务器。每条链路1Gbps。</li>
+<li>HyperX[4]：核心层8个交换机、汇聚层80个交换机、接入层9*9的网格交换机，并且互相连接、每台交换机上连接20个服务器。每条链路1Gbps。</li>
+</ul><p data-anchor-id="z20w">（2）负载</p><ul data-anchor-id="565a">
+<li>shuffle：进行MapReduce工作，每个服务器随机选取n个服务器进行reduce阶段，每个服务器发送128MB的数据，并且维持k个连接直到发送了相关的数据。在这个过程开始后10s进行测量，并持续1分钟。</li>
+<li>MSR：仿照参考文献[30]中的流间隔和流大小的分布生成流。</li>
+</ul><p data-anchor-id="e81k">（3）路由方法</p><ul data-anchor-id="o7jv">
+<li>Clos：VLB（Valiant Load Balancing：有效负载平衡），先将流路由到某个交换机上（随机统一选的），再由该交换机选择到达目的地的最短路由。</li>
+<li>HyperX：分布式贪婪路由（Distributed Greedy Routing），从可访问的交换机中选择最不拥塞的下一跳交换机，再由该交换机选择最短路由。</li>
+</ul><p data-anchor-id="vph8">（4）性能</p><ul data-anchor-id="wl11">
+<li>n=800，k=5，得到的实验结果如下： <br>
+<img src="https://s2.ax1x.com/2019/11/27/Q95kIH.png" alt="Q95kIH.png" title=""> <br>
+Clos和HyperX相对于ECMP，吞吐量增加了32%和55%。</li>
+<li>测试n和k的值对网络性能的影响，结果如下： <br>
+<img src="https://s2.ax1x.com/2019/11/27/Q95LOf.png" alt="Q95LOf.png" title=""> <br>
+<img src="https://s2.ax1x.com/2019/11/27/Q9IlX6.png" alt="Q9IlX6.png" title=""></li>
+<li>负载情况 <br>
+<img src="https://s2.ax1x.com/2019/11/27/Q9I7EF.png" alt="Q9I7EF.png" title=""> <br>
+不同的调度策略下，发送给控制器的的数据包数量，可以看到DevoFlow发送的数据包数量明显比OpenFlow的少，说明控制器需要处理的数据包少，处理效率高。 <br>
+<img src="https://s2.ax1x.com/2019/11/27/Q9ojiQ.png" alt="Q9ojiQ.png" title=""> <br>
+不同调度策略中流表项的平均数量和最大数量，DevoFlow的流表项数目明显比OpenFlow的少，说明对交换机内存的要求没有那么高。 <br>
+<img src="https://s2.ax1x.com/2019/11/27/Q9ovGj.png" alt="Q9ovGj.png" title=""> <br>
+95%和99%的流设置时间少于2ms所需要的带宽情况。说明数据平面和控制器平面之间的带宽完全足以支撑这种需求。</li>
+</ul></div>
+</body>
+</html>

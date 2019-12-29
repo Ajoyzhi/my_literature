@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Network Intrusion Detection Based on Stacked Sparse Autoencoder and Binary Tree Ensemble Method</title>
+</head>
+<body>
+<div id="wmd-preview" class="wmd-preview"><div class="md-section-divider"></div><div class="md-section-divider"></div><h1 data-anchor-id="v522" id="network-intrusion-detection-based-on-stacked-sparse-autoencoder-and-binary-tree-ensemble-method">Network Intrusion Detection Based on Stacked Sparse Autoencoder and Binary Tree Ensemble Method</h1><div class="md-section-divider"></div><h3 data-anchor-id="fp3f" id="baoan-zhang-yanhua-yu-jie-li">Baoan Zhang, Yanhua Yu, Jie Li</h3><div class="md-section-divider"></div><h4 data-anchor-id="bos7" id="2018-ieee">2018 IEEE</h4><p data-anchor-id="ztl4"><code>论文</code></p><hr><p data-anchor-id="8b1i">论文没有多大意思，没有解决什么实质性问题，而且方法都是别人提出的方法，从分类效果上看，还不错，但是没有测评检测时间，不知道检测效率怎么样。</p><ul data-anchor-id="mn9k">
+<li>基本思路：使用SSAE（Stacked Sparse AutoEncoder，堆叠稀疏自编码器）进行攻击检测，判断数据包异常/正常，通过SMOTE-EUS（Synthetic Minority Oversampling Technique-Ensemble of Undersampling，合成少数过抽样技术-欠抽样集成）处理数据不均衡的问题。</li>
+</ul><p data-anchor-id="95tq">（1）SSAE</p><ul data-anchor-id="rw6f">
+<li>AE（AutoEncoder，自编码器）：非监督的学习算法，出口节点数 = 入口节点数，但是隐藏层节点数远小于出口。</li>
+<li>SAE（Sparse AutoEncoder Network，稀疏自编码网络）：在信号输入之后，保证隐藏层的节点活跃度接近于0，即保证隐藏层尽量保证稀疏。这是对人脑的模拟，在信号进入人脑之后，人脑中只有一部分神经处于激活状态，而大部分神经都是未激活的状态。</li>
+<li>SSAE：以堆栈形式对模型进行训练。</li>
+</ul><p data-anchor-id="qi0v">（2）整体过程 <br>
+<img src="https://s2.ax1x.com/2019/12/25/libHHK.png" alt="libHHK.png" title=""></p><ul data-anchor-id="vt1q">
+<li>设定数据不均衡的阈值，即正常流量/攻击流量的比例如果超过4，就认为数据不均衡，需要使用SMOTE-EUS方法进行抽样。</li>
+</ul><p data-anchor-id="k68l">（3）实验效果</p><ul data-anchor-id="17xu">
+<li>数据库为NSL-KDD。</li>
+<li>选取5个隐藏节点，30次迭代 <br>
+<img src="https://s2.ax1x.com/2019/12/25/libLND.png" alt="libLND.png" title=""></li>
+<li>选取准确率、召回率和F1参数衡量分类效果。 <br>
+<img src="https://s2.ax1x.com/2019/12/25/libqAO.png" alt="libqAO.png" title=""> <br>
+<img src="https://s2.ax1x.com/2019/12/25/lib7B6.png" alt="lib7B6.png" title=""></li>
+</ul></div>
+</body>
+</html>
